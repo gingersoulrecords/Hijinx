@@ -1,2 +1,2 @@
-# Hijinx
+# hijinx
 Custom HTML tags that do front-end JavaScript stuff.
