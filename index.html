@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Hijinx Playground 2</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="elements // p-32 grid grid-cols-2 gap-8">
+
+  <div class="element one // p-8 bg-red-900 text-white text-center text-5xl rounded-xl shadow-lg">1
+    <a class="bg-black text-white" href="https://google.com" target="_blank">Google</a>
+  </div>
+  <div class="element two // p-8 bg-blue-900 text-white text-center text-5xl rounded-xl shadow-lg">2
+    <a class="bg-black text-white" href="https://microsoft.com" target="_blank">Microsoft</a>
+  </div>
+  <div class="element three // p-8 bg-green-900 text-white text-center text-5xl rounded-xl shadow-lg">3
+    <a class="bg-black text-white" href="https://wordpress.org" target="_blank">WordPress</a>
+  </div>
+  <div class="element four // p-8 bg-purple-900 text-white text-center text-5xl rounded-xl shadow-lg">4
+    <a class="bg-black text-white" href="https://google.com" target="_blank">Google</a>
+  </div>
+
+  <div class="element five p-8 bg-yellow-900 text-white text-center text-5xl rounded-xl shadow-lg">
+
+  </div>
+
+</div>
+
+<!-- the 'when' tag is a wrapper for a piece of functionality, and also tells the library 'when' to perform these actions: on document.ready or window.onload. -->
+<when event="load">
+
+  <!-- this will create hijinx.sets.elOne and give it the jQuery object of jQuery('.one') -->
+  <set name="elOne" targets=".one"></set>
+
+  <!-- this will create hijinx.sets.elTwo and give it the jQuery object of jQuery('.one').next(). Note that the value of next() will be equivalent to the text inside the <next> tag. -->
+  <set name="elTwo" targets=".two"></set>
+
+  <!-- this will create hijinx.sets.elThree and give it the jQuery object of jQuery('.one').siblings().not('.two, .four'). Note that the value of siblings() will be equivalent to the text inside the <siblings> tag, and that the value of not() will be the text value inside the <not> tag. -->
+  <set name="elThree" targets=".three">
+    <text></text>
+  </set>
+
+  <get name="elThree">
+    <append-to>.five</append-to>
+  </get>
+
+  <!-- this will create hijinx.sets.elFour and give it the jQuery object of jQuery('.one').parents('.elements').find('.element').not('.one, .two, .three'). -->
+  <set name="elFour" targets=".one">
+    <parents>.elements</parents>
+    <find>.element</find>
+    <not>.one, .two, .three</not>
+  </set>
+
+  <!-- this 'get' tag will grab the jQuery object stored in hijinx.sets.elOne and perform a jQuery operation, like
+hijinx.sets[elOne].insertAfter(hijinx.sets[elFour]). The script will check to see if the inner text of the 'get' child matches is present as an object in the hijinx.sets array, and if so, will fetch that. Otherwise, we'll just pass the inner text of the 'get' child to the jQuery method that matches its tag.
+  -->
+
+  <get name="elOne">
+    <add-class>transform rotate-3</add-class>
+    <remove-class>rounded-xl</remove-class>
+  </get>
+
+  <get targets="a">
+    <attr>
+      <data-test>success</data-test>
+      <tabindex>0</tabindex>
+    </attr>
+  </get>
+
+  <get name="elTwo">
+    <add-class>transform rotate-6</add-class>
+    <css>
+      <color>blue</color>
+    </css>
+    <attr>
+      <data-test>success</data-test>
+      <tabindex>0</tabindex>
+    </attr>
+  </get>
+
+  <!--   <get name="elThree">
+    <add-class>transform rotate-6</add-class>
+  </get> -->
+
+</when>
+
+<when event="load">
+
+  <!-- this will create a collection called elLinks on the hijinx.sets. It will loop through each matching target (.element), get its href attribute with jQuery, and store that information in a collection-->
+  <set name="elLinks" targets=".element">
+    <find>a</find>
+    <attr>href</attr>
+  </set>
+
+  <!-- this will get each .element and wrap it in an anchor tag, whose href attribute is referencing our aforementioned <set> tag and getting the appropriate URL-->
+  <get targets=".element">
+    <wrap>
+      <a class="border-4 p-4" href="[elLinks]" target="_blank"></a>
+    </wrap>
+  </get>
+
+</when>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
