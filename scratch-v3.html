@@ -1,0 +1,136 @@
+<!-- The following code will select all <p> tags and apply the css rules defined in the <css> tag. Note that the <css> tag is a child of the <select-all> tag, and that the <select-all> tag has a 'targets' attribute. This attribute tells the library to select all elements that match the selector in the 'targets' attribute. In this case, we're selecting all <p> tags. -->
+
+
+
+<select-all targets="p">
+    <css>
+        <color>red</color>
+        <font-size>16px</font-size>
+        <font-family>initial!important</font-family>
+    </css>
+    <attr>
+        <aria-hidden>true</aria-hidden>
+    </attr>
+</select-all>
+
+
+
+
+
+<select-all>
+    <targets select="p">
+        <prev>h2</prev>
+    </targets>
+    <css>
+        <color>red</color>
+        <font-size>16px</font-size>
+    </css>
+</select-all>
+
+$('p').prev('h2').css({
+'color': 'red',
+'font-size': '16px'
+});
+
+
+<!--
+
+The following code will select all elements with the class 'myClass' and apply the jQuery method 'addClass' with the value of 'newClass'. Note that the <add-class> tag is a child of the <select-all> tag, and that the <select-all> tag has a 'targets' attribute. This attribute tells the library to select all elements that match the selector in the 'targets' attribute. In this case, we're selecting all elements with the class 'myClass'.
+
+-->
+<select-all targets=".myClass">
+    <add-class>otherClass</add-class>
+</select-all>
+
+
+
+
+<!-- here's a more complex example of a notification bar built with Hijinx. -->
+
+<!-- the actual markup -->
+<div id="notification-bar">
+    This is a notification. <button id="close-button">Close</button>
+</div>
+
+<!-- Hijinx -->
+
+
+<!-- when we click #close-button -->
+<select-all targets="#close-button">
+
+    <on-click>
+
+        <!-- hide the notification bar -->
+        <select-all targets="#notification-bar">
+            <hide></hide>
+        </select-all>
+
+        <!-- set the value of 'notificationBar' to 'closed'-->
+        <store>
+            <notificationBar>closed</notificationBar>
+        </store>
+
+    </on-click>
+
+</select-all>
+
+
+<!-- If the value of 'notificationBar' is 'closed' -->
+<if store="notificationBar" is value="closed">
+    <!-- hide the notification bar -->
+    <select-all targets="#notification-bar">
+        <hide></hide>
+    </select-all>
+</if>
+
+
+
+
+
+
+<!-- Setting -->
+
+<!-- Here's an example that uses 'set' to define a jQuery object. elLinks is a collection of links found within .card elements (sets will run first), and we can use their values inside other operations, like wrapping .card elements in a link that references the href of the appropriate item in the collection. -->
+
+
+<set name="elLinks">
+    <select-all targets=".card">
+        <find>a</find>
+        <attr>href</attr>
+    </select-all>
+</set>
+
+
+<select-all targets=".card">
+    <wrap>
+        <a href="[elLinks]"></a>
+    </wrap>
+</select-all>
+
+<!-- accessibility example: getting post titles, then adding a sr-only span to each link with its post's title. -->
+
+<!-- create a group called postTitles, which are the texts of all the .post titles -->
+<set name="postTitles">
+    <select-all targets=".post">
+        <find>.post-title</find>
+        <text></text>
+    </select-all>
+</set>
+
+<!--  append a span with the text of the appropriate postTitle to each post link -->
+<select-all targets=".post a">
+    <append>
+        <span class="sr-only">about [postTitles]</span>
+    </append>
+</select-all>
+
+
+
+
+
+
+
+<when event="load">
+
+
+</when>
