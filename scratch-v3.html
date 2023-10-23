@@ -127,10 +127,153 @@ The following code will select all elements with the class 'myClass' and apply t
 
 
 
+<!--
+
+    This will use this document's HTML syntax to add local navigation to a page
+
+    1. Look through all .prose elements and find all h2 elements. Get their text and store it, along with a url-friendly version of the text, in sets called 'localNavItemsText' and 'localNavItemsUrl'.
+
+    2. Create a <nav> element with the class 'local-nav' and append it to the .prose element. Then, for each item in the localNavItems set, append an <a> element with the text of the item and a href of '#item-url-friendly-text'.
+
+    3. Then, for each .prose element, find all h2 elements and wrap each of them in an <a> element with a href of '#item-url-friendly-text'.
+
+-->
+
+<!-- create a set called 'localNavItems' that contains the text of all h2 elements in .prose elements -->
+<set name="localNavItemsText">
+    <select-all targets=".prose">
+        <find>h2</find>
+        <text></text>
+    </select-all>
+</set>
+
+
+<!-- create a set called 'localNavItemsUrl' that contains the url-friendly text of all h2 elements in .prose elements -->
+<set name="localNavItemsUrl">
+    <select-all targets="[localNavItemsText]">
+        <!-- urlify is a custom method that converts text to a url-friendly format with a '#' at the beginning -->
+        <urlify></urlify>
+    </select-all>
+</set>
+
+<!-- This is optional, .local-nav can already be in the DOM -->
+<select-all targets=".prose">
+    <append>
+        <nav class="local-nav"></nav>
+    </append>
+</select-all>
+
+<!-- for each item in the localNavItems set, append an <a> element with the text of the item and a href of '#item-url-friendly-text'. -->
+<select-all targets=".local-nav">
+    <append>
+        <a href="[localNavItemsUrl]">[localNavItemsText]</a>
+    </append>
+</select-all>
+
+
+<!-- for each .prose element, find all h2 elements and wrap each of them in an <a> element with a href of '#item-url-friendly-text'. -->
+<select-all targets=".prose h2">
+    <wrap>
+        <a href="[localNavItemsUrl]"></a>
+    </wrap>
+</select-all>
 
 
 
-<when event="load">
+<!-- This will use a custom <localnav> element to add local navigation to a page -->
+<localnav targets=".prose" headings="h2, h3" destination=".local-nav"></localnav>
+
+<!-- This will use a custom <localnav> element to add local navigation to a page with h3 headings -->
+<localnav>
+    <targets>.prose</targets>
+    <headings>h2, h3</headings>
+    <destination>.local-nav</destination>
+    <scrollspy>true</scrollspy>
+</localnav>
 
 
-</when>
+
+<!--
+    we can also use hijinx to perform greensock animations, first by establishing a timeline, then by adding tweens to that timeline, like from and to tweens.
+
+    for example, the following HTML syntax which passes 'to' properties as child tags of a <to> tag instead of as attributes
+
+    -->
+
+<to>
+    <color>red</color>
+    <duration>1</duration>
+</to>
+
+<!-- we can wrap those timelines in a scrolltrigger, which will fire the timeline when the element is scrolled into view. For example, using our above example, we can wrap the timeline in a scrolltrigger (a tag which has its own child tag properties like <start> and <end>) like so: -->
+
+
+
+<animation>
+    <on-scroll targets="section">
+        <start>top 50%</start>
+        <end>bottom 50%</end>
+        <scrub>true</scrub>
+    </on-scroll>
+    <timeline>
+        <to targets="p">
+            <color>red</color>
+            <duration>1</duration>
+            <stagger>0.5</stagger>
+        </to>
+    </timeline>
+</animation>
+
+
+
+
+
+<!-- we can also use GSAP's batch() method to animate a group of elements as they all collectively enter the viewport. Here's
+the html for that, using a <batch> element and appropriate child tags for batch properties: -->
+
+<batch>
+    <targets>section</targets>
+    <on-scroll>
+        <start>top 50%</start>
+        <end>bottom 50%</end>
+        <scrub>true</scrub>
+    </on-scroll>
+    <timeline>
+        <to targets="p">
+            <color>red</color>
+            <duration>1</duration>
+            <stagger>0.5</stagger>
+        </to>
+    </timeline>
+
+
+
+
+
+
+    <!-- Notes -->
+
+    <!--
+
+    -we'll want to perform an 'each' on the collection of elements that we're targeting.
+    -we want to use arriveJS to watch for new elements that match the selector.
+    -methods like insertBefore or insertAfter will need to be able to target elements that are not yet in the DOM, so we'll need to use arriveJS for that as well.
+
+-->
+
+
+    <radio-group>
+
+    </radio-group>
+
+    <input-text>
+
+    </input-text>
+
+    <input-range id="" slider="true" persist="true">
+
+    </input-range>
+
+    <input-button-group>
+
+    </input-button-group>
