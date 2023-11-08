@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
 
     <!-- Tailwind CSS -->
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
@@ -39,58 +40,99 @@
         quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
         necessitatibus.</p>
 
-    <button class="px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
 
-    <!--
-    this code will make all h1's red
--->
-    <when event="load">
-        <select-all targets="h1">
-            <css>
-                <color>red</color>
-            </css>
-        </select-all>
-    </when>
 
-    <!--
-    this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
--->
-    <when event="load">
-        <select-all>
-            <targets>h2</targets>
-            <css>
-                <color>blue</color>
-                <font-family>Georgia</font-family>
-            </css>
-            <attr>
-                <name>data-poo</name>
-                <value>bar</value>
-            </attr>
-        </select-all>
+    <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
+            <when event="load">
+                <select-all targets="h1">
+                    <css>
+                        <color>red</color>
+                    </css>
+                </select-all>
+            </when>
 
-        <!--
+            <!-- this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
+    -->
+            <when event="load">
+                <select-all>
+                    <targets>h2</targets>
+                    <css>
+                        <color>blue</color>
+                        <font-family>Georgia</font-family>
+                    </css>
+                    <attr>
+                        <name>data-poo</name>
+                        <value>bar</value>
+                    </attr>
+                </select-all>
+
+                <!--
         this code will make all h3s that precede a p tag red with font-size 16px.
 
--->
-        <select-all>
-            <targets select-all="p">
-                <prev>h3</prev>
-            </targets>
-            <css>
-                <color>orange</color>
-                <font-size>160px</font-size>
-            </css>
-        </select-all>
-    </when>
+    -->
+                <select-all>
+                    <targets select-all="p">
+                        <prev>h3</prev>
+                    </targets>
+                    <css>
+                        <color>orange</color>
+                        <font-style>italic</font-style>
+                    </css>
+                </select-all>
+
+
+                <!-- <select-all targets="p">
+                    <add-class>underline uppercase</add-class>
+                </select-all> -->
+
+            </when>
+    </textarea>
+
+    <button class="block px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
+
+
+    <div id="output">
+
+
+    </div>
 
 
 
 
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
+    <script>
+        // Function to update the output with the editor's content
+        function updateOutput(editor) {
+            document.getElementById("output").innerHTML = editor.getValue();
+        }
+
+        // Initialize CodeMirror on the textarea with HTML mode
+        var editor = CodeMirror.fromTextArea(document.getElementById("input-textarea"), {
+            mode: "xml", // Set mode to XML for HTML syntax highlighting
+            htmlMode: true, // Enable HTML mode in XML
+            lineNumbers: true,
+        });
+
+        // Event listener to update the output element on editor changes
+        editor.on("change", function (instance) {
+            updateOutput(instance);
+        });
+
+        // Update the output element on initial page load
+        window.onload = function () {
+            updateOutput(editor);
+            hijinx.init();
+        };
+    </script>
 
 
     <!-- Alpine.js -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.2/cdn.js"
+        integrity="sha512-lNq2c0EZyCnieSFk9jEWqD60SbJY/6MWMaJsEHk1Tq3y8N5c9E9PuNlSq1jhf499bTkTslfexdzcz7zSTk9Qzw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Arrive.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
