@@ -1,7 +1,5 @@
 <!-- The following code will select all <p> tags and apply the css rules defined in the <css> tag. Note that the <css> tag is a child of the <select-all> tag, and that the <select-all> tag has a 'targets' attribute. This attribute tells the library to select all elements that match the selector in the 'targets' attribute. In this case, we're selecting all <p> tags. -->
 
-
-
 <select-all targets="p">
     <css>
         <color>red</color>
@@ -11,14 +9,20 @@
     <attr>
         <aria-hidden>true</aria-hidden>
     </attr>
+
 </select-all>
 
+<!--
+    here's what this html would look like in jQuery:
+
+
+-->
 
 
 
 
 <select-all>
-    <targets select="p">
+    <targets select-all="p">
         <prev>h2</prev>
     </targets>
     <css>
@@ -209,6 +213,33 @@ The following code will select all elements with the class 'myClass' and apply t
 
 
 
+
+
+
+<scrolltrigger name="fades" users=".fades-parent">
+    <start>top 50%</start>
+    <end>bottom 50%</end>
+    <scrub>true</scrub>
+    <animation>
+        <timeline>
+            <to targets="p">
+                <color>red</color>
+                <duration>1</duration>
+                <stagger>0.5</stagger>
+            </to>
+
+            <to targets="h2">
+                <color>blue</color>
+                <duration>1</duration>
+                <stagger>0.5</stagger>
+            </to>
+        </timeline>
+    </animation>
+</scrolltrigger>
+
+
+
+
 <animation>
     <on-scroll targets="section">
         <start>top 50%</start>
@@ -258,6 +289,50 @@ the html for that, using a <batch> element and appropriate child tags for batch 
     -we'll want to perform an 'each' on the collection of elements that we're targeting.
     -we want to use arriveJS to watch for new elements that match the selector.
     -methods like insertBefore or insertAfter will need to be able to target elements that are not yet in the DOM, so we'll need to use arriveJS for that as well.
+    -we want to be able to add a class to something AND select that element with select-all
+
+    -consider skipping the select-all and allowing components (click handlers, animations) to be declared inside the HTML, e.g.
+
+    -->
+
+
+    <button>
+        <span>Click Me</span>
+
+        <on-click>
+
+            <!-- hide the notification bar -->
+            <select-all targets="#notification-bar">
+                <hide></hide>
+            </select-all>
+
+            <!-- set the value of 'notificationBar' to 'closed'-->
+            <store>
+                <notificationBar>closed</notificationBar>
+            </store>
+        </on-click>
+
+    </button>
+
+    <!-- or -->
+
+    <div>
+        <p>Headline goes here!</p>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa delectus nemo nostrum est, autem aut, non
+            enim temporibus, vel omnis rem ipsum alias perferendis et sunt ratione reprehenderit natus.</p>
+        <scrolltrigger>fades</scrolltrigger>
+    </div>
+
+
+    <!--
+    -general lifecycle
+
+
+    1.
+    2. creating new elements
+    3. adding attributes
+    4.
+    5.
 
 -->
 
@@ -277,3 +352,47 @@ the html for that, using a <batch> element and appropriate child tags for batch 
     <input-button-group>
 
     </input-button-group>
+
+    {{hero-inner}} : `
+
+
+    `
+
+    Mobius section panel:
+
+    {{hero-outer}}
+
+    {{hero-inner}}
+
+    {{/hero-outer}}
+
+
+
+    Part panel:
+
+    name = {{hero-outer}}
+
+    content = <div>jkl;</div>
+
+    {{myDiv}} : '<div></div>',
+    {{myDiv}} : '<div></div>',
+
+
+
+    <!--- {{mypart}} --->
+    <div>mypartcontent</div>
+
+    <!--- {{myotherpart}} --->
+    <div>myotherpartcontent</div>
+
+    <!--- {{mypart}} --->
+    <div>mypartcontent</div>
+
+    <!--- {{myotherpart}} --->
+    <div>myotherpartcontent</div>
+
+    <!--- {{mypart}} --->
+    <div>mypartcontent</div>
+
+    <!--- {{myotherpart}} --->
+    <div>myotherpartcontent</div>

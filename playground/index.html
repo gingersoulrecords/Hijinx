@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+
+    <!-- Tailwind CSS -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+
+
+    <style>
+        when {
+            display: none;
+        }
+    </style>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body class="p-32">
+
+    <h1 class="text-5xl font-bold">
+        Hello World, I’m an H1
+    </h1>
+
+    <h2 class="text-3xl font-bold">
+        Hello World, I’m an H2
+    </h2>
+
+    <button class="px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
+
+
+    <when event="load">
+        <select-all targets="h1">
+            <css>
+                <color>red</color>
+            </css>
+        </select-all>
+    </when>
+
+    <when event="load">
+        <select-all>
+            <targets>h2</targets>
+            <css>
+                <color>blue</color>
+                <font-family>Georgia</font-family>
+            </css>
+            <attr>
+                <name>data-poo</name>
+                <value>bar</value>
+            </attr>
+        </select-all>
+    </when>
+
+
+
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Arrive.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
+
+    <!-- Custom scripts -->
+    <!-- <script src="hijinx.js"></script>
+    <script src="processWhen.js"></script>
+    <script src="processSelectAll.js"></script>
+    <script src="processChildren.js"></script>
+    <script src="init.js"></script> -->
+
+    <script src="codekit-min.js"></script>
+
+</body>
+
+</html>
+
+
+
+</body>
+
+</html>
