@@ -31,9 +31,19 @@
         Hello World, I’m an H2
     </h2>
 
+    <h3>
+        Hello World, I’m an H3
+    </h3>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor est laboriosam soluta
+        quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
+        necessitatibus.</p>
+
     <button class="px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
 
-
+    <!--
+    this code will make all h1's red
+-->
     <when event="load">
         <select-all targets="h1">
             <css>
@@ -42,6 +52,9 @@
         </select-all>
     </when>
 
+    <!--
+    this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
+-->
     <when event="load">
         <select-all>
             <targets>h2</targets>
@@ -54,7 +67,25 @@
                 <value>bar</value>
             </attr>
         </select-all>
+
+        <!--
+        this code will make all h3s that precede a p tag red with font-size 16px.
+
+-->
+        <select-all>
+            <targets select-all="p">
+                <prev>h3</prev>
+            </targets>
+            <css>
+                <color>orange</color>
+                <font-size>160px</font-size>
+            </css>
+        </select-all>
     </when>
+
+
+
+
 
 
 

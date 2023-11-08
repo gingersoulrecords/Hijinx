@@ -6,11 +6,11 @@ var hijinx = {
         console.log('Setting up Arrive.js for selector:', selector);
 
         // Set up Arrive.js on the document for the given selector
-        $(document).arrive(selector, { existing: true }, function () {
+        jQuery(document).arrive(selector, { existing: true }, function () {
             console.log('Element arrived or already exists in the DOM:', this);
 
             // Call the callback function passing the newly arrived or existing element
-            callback($(this));
+            callback(jQuery(this));
         });
     },
     refresh: function () {
@@ -20,7 +20,7 @@ var hijinx = {
         this.whens = [];
 
         // Unbind any existing Arrive.js listeners to prevent duplicates
-        $(document).unbindArrive();
+        jQuery(document).unbindArrive();
 
         // Process <when> tags again
         this.init();
@@ -30,8 +30,8 @@ var hijinx = {
 
         // You will need to invoke the process when you defined in the init.js
         // Assuming processWhen is a method defined elsewhere and attached to hijinx
-        $('when').each((index, element) => {
-            this.processWhen($(element), index);
+        jQuery('when').each((index, element) => {
+            this.processWhen(jQuery(element), index);
         });
     }
 };
