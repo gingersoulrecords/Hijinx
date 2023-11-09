@@ -25,6 +25,33 @@ var hijinx = {
         jQuery('when').each((index, element) => {
             this.processWhen(jQuery(element), index);
         });
+    },
+    processWhen: function ($when, index) {
+        var event = $when.attr('event');
+        var promises = [];
+
+        $when.children('select-all').each(function () {
+            var selectAllObject = {
+                element: $(this),
+                targets: $(this).attr('targets')
+            };
+
+            var promise = hijinx.processChildren(selectAllObject);
+            promises.push(promise);
+        });
+
+        Promise.all(promises).then(function () {
+            if (event === 'done') {
+                $when.children('select-all').each(function () {
+                    var selectAllObject = {
+                        element: $(this),
+                        targets: $(this).attr('targets')
+                    };
+
+                    hijinx.processChildren(selectAllObject);
+                });
+            }
+        });
     }
 };
 

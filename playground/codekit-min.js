@@ -25,6 +25,33 @@ var hijinx = {
         jQuery('when').each((index, element) => {
             this.processWhen(jQuery(element), index);
         });
+    },
+    processWhen: function ($when, index) {
+        var event = $when.attr('event');
+        var promises = [];
+
+        $when.children('select-all').each(function () {
+            var selectAllObject = {
+                element: $(this),
+                targets: $(this).attr('targets')
+            };
+
+            var promise = hijinx.processChildren(selectAllObject);
+            promises.push(promise);
+        });
+
+        Promise.all(promises).then(function () {
+            if (event === 'done') {
+                $when.children('select-all').each(function () {
+                    var selectAllObject = {
+                        element: $(this),
+                        targets: $(this).attr('targets')
+                    };
+
+                    hijinx.processChildren(selectAllObject);
+                });
+            }
+        });
     }
 };
 
@@ -151,64 +178,56 @@ console.log('processSelectAll function ready.');
 
 // processChildren.js
 (function ($) {
-    console.log('Setting up processChildren function.');
-
     hijinx.processChildren = function (selectAllObject) {
-        console.log('Processing children of <select-all> tag:', selectAllObject.element);
+        return new Promise(function (resolve) {
+            selectAllObject.element.children().each(function () {
+                var $child = $(this);
+                var method = $child.prop('tagName').toLowerCase();
+                var args = {};
 
-        // Loop through the children of the <select-all> element
-        selectAllObject.element.children().each(function () {
-            var $child = $(this);
-            var method = $child.prop('tagName').toLowerCase(); // Get the method name
-            var args = {};
+                $child.children().each(function () {
+                    var argName = $(this).prop('tagName').toLowerCase();
+                    var argValue = $(this).text();
+                    args[argName] = argValue;
+                });
 
-            // Loop through the children of this method element and form the arguments object
-            $child.children().each(function () {
-                var argName = $(this).prop('tagName').toLowerCase();
-                var argValue = $(this).text();
-                args[argName] = argValue;
+                switch (method) {
+                    case 'css':
+                        let cssString = "";
+                        $.each(args, function (prop, value) {
+                            cssString += `${prop}: ${value};`;
+                        });
+                        selectAllObject.targets.attr({
+                            "x-data": `{ style: "${cssString}" }`,
+                            "x-bind:style": "style"
+                        });
+                        console.log('Applied CSS to elements:', cssString);
+                        resolve();
+                        break;
+                    case 'attr':
+                        $.each(args, function (name, value) {
+                            selectAllObject.targets.attr(name, value);
+                        });
+                        console.log('Applied attributes to elements:', args);
+                        resolve();
+                        break;
+                    case 'add-class':
+                        var className = $child.text();
+                        selectAllObject.targets.attr({
+                            "x-data": `{ addClass: "${className}" }`,
+                            "x-bind:class": "addClass"
+                        });
+                        console.log('Added class to elements:', className);
+                        resolve();
+                        break;
+                    default:
+                        console.log('Unknown method:', method);
+                        break;
+                }
             });
-
-            // Now apply the jQuery method to the targets
-            // We need to handle different jQuery methods accordingly
-            switch (method) {
-                case 'css':
-                    let cssString = "";
-                    $.each(args, function (prop, value) {
-                        cssString += `${prop}: ${value};`;
-                    });
-                    selectAllObject.targets.attr({
-                        "x-data": `{ style: "${cssString}" }`,
-                        "x-bind:style": "style"
-                    });
-                    console.log('Applied CSS to elements:', cssString);
-                    break;
-                case 'attr':
-                    // Assuming each child of <attr> represents an attribute
-                    $.each(args, function (name, value) {
-                        selectAllObject.targets.attr(name, value);
-                    });
-                    console.log('Applied attributes to elements:', args);
-                    break;
-                case 'add-class':
-                    var className = $child.text();
-                    selectAllObject.targets.attr({
-                        "x-data": `{ addClass: "${className}" }`,
-                        "x-bind:class": "addClass"
-                    });
-                    console.log('Added class to elements:', className);
-                    break;
-                // Add more cases for other jQuery methods as needed
-                default:
-                    console.log('Unknown method:', method);
-                    break;
-            }
         });
     };
-
 })(jQuery);
-
-console.log('processChildren function ready.');
 
 
 // init.js
