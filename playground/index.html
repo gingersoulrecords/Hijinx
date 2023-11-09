@@ -15,6 +15,10 @@
         when {
             display: none;
         }
+
+        .CodeMirror {
+            height: auto !important;
+        }
     </style>
 
     <!-- jQuery -->
@@ -36,7 +40,8 @@
         Hello World, I’m an H3
     </h3>
 
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor est laboriosam soluta
+    <p class="italic">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor est
+        laboriosam soluta
         quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
         necessitatibus.</p>
 
@@ -88,7 +93,7 @@
             </when>
     </textarea>
 
-    <button class="block px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
+    <button class="fixed top-0 left-0 px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
 
 
     <div id="output">
