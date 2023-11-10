@@ -1,0 +1,1 @@
+!function($){var e={whens:[],processWhens:function(){$("when").each((function(n,s){e.whens.push({index:n,event:$(s).attr("event"),media:$(s).attr("media")})}))}};e.processWhens()}(jQuery);

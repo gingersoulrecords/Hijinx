@@ -48,12 +48,13 @@
 
 
     <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
-            <when event="load">
+            <when event="load" media="(min-width:768px)">
                 <select-all targets="h1">
                     <css>
                         <color>red</color>
                     </css>
                 </select-all>
+
             </when>
 
             <!-- this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
@@ -70,6 +71,14 @@
                         <value>bar</value>
                     </attr>
                 </select-all>
+
+
+                <set name="elLinks">
+                    <select-all targets=".card">
+                        <find>a</find>
+                        <attr>href</attr>
+                    </select-all>
+                </set>
 
                 <!--
         this code will make all h3s that precede a p tag red with font-size 16px.
@@ -135,7 +144,7 @@
         // Update the output element on initial page load
         window.onload = function () {
             updateOutput(editor);
-            hijinx.init();
+            //hijinx.init();
         };
     </script>
 
@@ -148,13 +157,12 @@
     <!-- Arrive.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
 
-    <!-- Custom scripts -->
-    <!-- <script src="hijinx.js"></script>
-    <script src="processWhen.js"></script>
-    <script src="processSelectAll.js"></script>
-    <script src="processChildren.js"></script>
-    <script src="init.js"></script> -->
+    <!-- Enquire.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.6/enquire.min.js"
+        integrity="sha512-1Nnt0yKXV2U0kJ3Wm/FDDO13GRmL6v5BK2rL05eH7gPS91fVh//y477BlA35U/7zCSdWBCCbwoF5LQc8deFlgw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- Custom scripts -->
     <script src="codekit-min.js"></script>
 
 </body>

@@ -1,23 +1,16 @@
 <!-- The following code will select all <p> tags and apply the css rules defined in the <css> tag. Note that the <css> tag is a child of the <select-all> tag, and that the <select-all> tag has a 'targets' attribute. This attribute tells the library to select all elements that match the selector in the 'targets' attribute. In this case, we're selecting all <p> tags. -->
 
-<select-all targets="p">
-    <css>
-        <color>red</color>
-        <font-size>16px</font-size>
-        <font-family>initial!important</font-family>
-    </css>
-    <attr>
-        <aria-hidden>true</aria-hidden>
-    </attr>
-
-</select-all>
-
-<!--
-    here's what this html would look like in jQuery:
-
-
--->
-
+<when event="load" media="(min-width:768px)">
+    <select-all targets="p">
+        <css>
+            <color>red</color>
+            <font-size>16px</font-size>
+        </css>
+        <attr>
+            <aria-hidden>true</aria-hidden>
+        </attr>
+    </select-all>
+</when>
 
 
 
@@ -29,6 +22,10 @@
         <color>red</color>
         <font-size>16px</font-size>
     </css>
+    <attr>
+        <aria-hidden>true</aria-hidden>
+    </attr>
+
 </select-all>
 
 $('p').prev('h2').css({
