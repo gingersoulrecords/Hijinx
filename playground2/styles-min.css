@@ -1,0 +1,160 @@
+body {
+  --mobiusEditorActiveLineBackgroundColor: #1c1f2a; /* the background of the selected text */
+  --mobiusEditorAtomColor: #babed7; /* flex in display:flex */
+  --mobiusEditorAttributeColor: #c690e5; /* class in <section class="relative py-section px-doc"> */
+  --mobiusEditorBackgroundColor: #292d3d;
+  --mobiusEditorBraceColor: #ffd737; /* { in .selector { */
+  --mobiusEditorBracketColor: #85defd; /* < in <section class="relative py-section px-doc"> */
+  --mobiusEditorBuiltInColor: #fa8b6f; /* #myID */
+  --mobiusEditorCalleeColor: #80aafb; /* var in font-size: var(--myValue); */
+  --mobiusEditorColor: #babed7;
+  --mobiusEditorColonColor: #85defd;
+  --mobiusEditorCommentColor: #676e93;
+  --mobiusEditorCSSStringColor: #c2e994; /* "value" in [my-attribute="value"] { */
+  --mobiusEditorCSSTagColor: #c991e7; /* my-attribute in [my-attribute="value"] { */
+  --mobiusEditorCursorColor: yellow; /* the cursor */
+  --mobiusEditorDefColor: #84dbfa; /* @media in @media (min-width: 768px) { */
+  --mobiusEditorGutterBackgroundColor: #292d3d; /* the background of the gutter */
+  --mobiusEditorGutterBorderColor: #393e57; /* the border of the gutter */
+  --mobiusEditorHTMLStringColor: #c2e994; /* relative in <section class="relative */
+  --mobiusEditorHTMLTagColor: #f36f79; /* section in <section class */
+  --mobiusEditorKeywordColor: #fa8b6f; /* keyword (e.g. !important) */
+  --mobiusEditorLineNumberColor: #3a3f57;
+  --mobiusEditorNumberColor: #fa8b6f; /* 100% in width: 100%; */
+  --mobiusEditorParenthesisColor: #dd6dd3; /* ( in color: var(--text-pop); */
+  --mobiusEditorPropertyColor: #b1ccd6; /* width in width: 100%; */
+  --mobiusEditorQualifierColor: #ffcb74; /* .selector in .selector { */
+  --mobiusEditorSelectionBackgroundColor: #3f4561;
+  --mobiusEditorVariableColor: #80aafb; /* var in font-size: var(--myValue); */
+  --mobiusEditorVariable2Color: #babed7; /* --myValue in font-size: var(--myValue); */
+  --mobiusEditorVariable3Color: #c991e7; /* root in :root { */
+}
+
+.CodeMirror {
+  background-color: var(--mobiusEditorBackgroundColor) !important;
+  color: var(--mobiusEditorColor) !important;
+  font-family: Monolisa;
+}
+
+.CodeMirror-gutters {
+  background-color: var(--mobiusEditorGutterBackgroundColor) !important;
+  border-color: var(--mobiusEditorGutterBorderColor) !important;
+}
+
+.CodeMirror-linenumber,
+.CodeMirror-guttermarker-subtle {
+  color: var(--mobiusEditorLineNumberColor) !important;
+}
+
+.CodeMirror-activeline-background {
+  background-color: var(--mobiusEditorActiveLineBackgroundColor) !important;
+}
+
+.cm-atom {
+  color: var(--mobiusEditorAtomColor) !important;
+}
+
+.cm-attribute {
+  color: var(--mobiusEditorAttributeColor) !important;
+}
+
+.cm-brace {
+  color: var(--mobiusEditorBraceColor) !important;
+}
+
+.cm-bracket,
+.cm-s-html .cm-tag.cm-bracket {
+  color: var(--mobiusEditorBracketColor) !important;
+}
+
+.cm-builtin {
+  color: var(--mobiusEditorBuiltInColor) !important;
+}
+
+.cm-callee,
+.cm-variable.cm-callee {
+  color: var(--mobiusEditorCalleeColor) !important;
+}
+
+.cm-colon {
+  color: var(--mobiusEditorColonColor) !important;
+}
+
+.cm-comment {
+  color: var(--mobiusEditorCommentColor) !important;
+}
+
+.cm-cursor {
+  color: var(--mobiusEditorCursorColor) !important;
+}
+
+.cm-def {
+  color: var(--mobiusEditorDefColor) !important;
+}
+
+.cm-keyword {
+  color: var(--mobiusEditorKeywordColor) !important;
+}
+
+.cm-number {
+  color: var(--mobiusEditorNumberColor) !important;
+}
+
+.cm-parenthesis {
+  color: var(--mobiusEditorParenthesisColor) !important;
+}
+
+.cm-property {
+  color: var(--mobiusEditorPropertyColor) !important;
+}
+
+.cm-qualifier {
+  color: var(--mobiusEditorQualifierColor) !important;
+}
+
+.CodeMirror-selected,
+.CodeMirror-matchingtag {
+  background-color: var(--mobiusEditorSelectionBackgroundColor) !important;
+}
+
+.cm-string {
+  color: var(--mobiusEditorHTMLStringColor) !important;
+}
+
+.cm-s-css .cm-string {
+  color: var(--mobiusEditorCSSStringColor) !important;
+}
+
+.cm-s-css .cm-tag {
+  color: var(--mobiusEditorCSSTagColor) !important;
+}
+
+.cm-tag {
+  color: var(--mobiusEditorHTMLTagColor) !important;
+}
+
+.cm-variable {
+  color: var(--mobiusEditorVariableColor) !important;
+}
+
+.cm-variable-2 {
+  color: var(--mobiusEditorVariable2Color) !important;
+}
+
+.cm-variable-3 {
+  color: var(--mobiusEditorVariable3Color) !important;
+}
+
+/* dark globals */
+
+span.cm-property.cm-error {
+  background: none !important;
+  color: inherit !important;
+  text-decoration: underline !important;
+  -webkit-text-decoration-style: wavy !important;
+  text-decoration-style: wavy !important;
+  -webkit-text-decoration-color: red !important;
+  text-decoration-color: red !important;
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+}

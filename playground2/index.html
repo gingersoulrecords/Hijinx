@@ -10,6 +10,9 @@
     <!-- Tailwind CSS -->
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="styles.css">
+
 
     <style>
         when {
@@ -28,85 +31,97 @@
 
 <body class="p-32">
 
-    <h1 class="text-5xl font-bold">
-        Hello World, I’m an H1
-    </h1>
+    <div class="grid grid-cols-2 gap-16">
+        <!-- elements -->
+        <div>
+            <h1 class="text-5xl font-bold">
+                Hello World, I’m an H1
+            </h1>
 
-    <h2 class="text-3xl font-bold">
-        Hello World, I’m an H2
-    </h2>
+            <h2 class="text-3xl font-bold">
+                Hello World, I’m an H2
+            </h2>
 
-    <h3>
-        Hello World, I’m an H3
-    </h3>
+            <h3>
+                Hello World, I’m an H3
+            </h3>
 
-    <p class="italic">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor est
-        laboriosam soluta
-        quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
-        necessitatibus.</p>
+            <p class="italic">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor
+                est
+                laboriosam soluta
+                quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
+                necessitatibus.</p>
+        </div>
 
+        <!-- code -->
+        <div>
+            <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
+<when event="load" media="(min-width:768px)">
+    <select-all targets="h1">
+        <css>
+            <color>red</color>
+        </css>
+    </select-all>
+</when>
 
-
-    <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
-            <when event="load" media="(min-width:768px)">
-                <select-all targets="h1">
-                    <css>
-                        <color>red</color>
-                    </css>
-                </select-all>
-
-            </when>
-
-            <!-- this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
-    -->
-            <when event="load">
-                <select-all>
-                    <targets>h2</targets>
-                    <css>
-                        <color>blue</color>
-                        <font-family>Georgia</font-family>
-                    </css>
-                    <attr>
-                        <name>data-poo</name>
-                        <value>bar</value>
-                    </attr>
-                </select-all>
-
-
-                <set name="elLinks">
-                    <select-all targets=".card">
-                        <find>a</find>
-                        <attr>href</attr>
-                    </select-all>
-                </set>
-
-                <!--
-        this code will make all h3s that precede a p tag red with font-size 16px.
-
-    -->
-                <select-all>
-                    <targets select-all="p">
-                        <prev>h3</prev>
-                    </targets>
-                    <css>
-                        <color>orange</color>
-                        <font-style>italic</font-style>
-                    </css>
-                </select-all>
+<!-- this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
+-->
+<when event="load">
+    <select-all>
+        <targets>h2</targets>
+        <css>
+            <color>blue</color>
+            <font-family>Georgia</font-family>
+        </css>
+        <attr>
+            <name>data-poo</name>
+            <value>bar</value>
+        </attr>
+    </select-all>
 
 
-                <!-- <select-all targets="p">
-                    <add-class>underline uppercase</add-class>
-                </select-all> -->
+    <set name="elLinks">
+        <select-all targets=".card">
+            <find>a</find>
+            <attr>href</attr>
+        </select-all>
+    </set>
 
-            </when>
+    <!--
+this code will make all h3s that precede a p tag red with font-size 16px.
 
-            <when event="done">
-                <select-all targets="p">
-                    <add-class>transform rotate-6</add-class>
-                </select-all>
-            </when>
+-->
+    <select-all>
+        <targets select-all="p">
+            <prev>h3</prev>
+        </targets>
+        <css>
+            <color>orange</color>
+            <font-style>italic</font-style>
+        </css>
+    </select-all>
+
+
+    <!-- <select-all targets="p">
+        <add-class>underline uppercase</add-class>
+    </select-all> -->
+
+</when>
+
+<when event="done">
+    <select-all targets="p">
+        <add-class>transform rotate-6</add-class>
+    </select-all>
+</when>
     </textarea>
+        </div>
+    </div>
+
+
+
+
+
+
 
     <button class="fixed top-0 left-0 px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
 
@@ -134,6 +149,7 @@
             mode: "xml", // Set mode to XML for HTML syntax highlighting
             htmlMode: true, // Enable HTML mode in XML
             lineNumbers: true,
+            lineWrapping: true,
         });
 
         // Event listener to update the output element on editor changes
