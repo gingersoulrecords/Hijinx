@@ -29,11 +29,11 @@
 
 </head>
 
-<body class="p-32 bg-gray-900 text-gray-100">
+<body class="p-8 md:p-16 lg:p-32 bg-gray-900 text-gray-100">
 
-    <div class="grid grid-cols-2 gap-16">
+    <div class="grid md:grid-cols-2 gap-16">
         <!-- elements -->
-        <div>
+        <div class="flex flex-col gap-8">
             <h1 class="text-5xl font-bold">
                 Hello World, I’m an H1
             </h1>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="card border p-4">
-                <a class="underline" href="https://wordpress.org">Google</a>
+                <a class="underline" href="https://wordpress.org">WordPress</a>
             </div>
 
         </div>
@@ -85,7 +85,9 @@
     </select-all>
 </when>
 
-<when event="load">
+
+
+ <when event="load">
 
     <select-all>
         <targets>h2</targets>
@@ -99,14 +101,6 @@
         </attr>
     </select-all>
 
-    <set name="elLinks">
-        <select-all>
-            <targets for-each=".card">
-                <find>a</find>
-                <attr>href</attr>
-            </targets>
-        </select-all>
-    </set>
 
 
     <select-all>
@@ -120,17 +114,29 @@
     </select-all>
 
 
-    <!-- <select-all targets="p">
-        <add-class>underline uppercase</add-class>
-    </select-all> -->
+
 
 </when>
 
-<when event="done">
+<!--
+
+        <set name="elLinks">
+        <select-all>
+            <targets for-each=".card">
+                <find>a</find>
+                <attr>href</attr>
+            </targets>
+        </select-all>
+    </set>
+    <select-all targets="p">
+        <add-class>underline uppercase</add-class>
+    </select-all>
+
+    <when event="done">
     <select-all targets="p">
         <add-class>transform rotate-6</add-class>
     </select-all>
-</when>
+</when> -->
     </textarea>
         </div>
     </div>

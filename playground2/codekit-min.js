@@ -36,9 +36,47 @@
             });
             return statements;
         },
+        processWhens: function () {
+            this.whens.forEach((when, index) => {
+                if (when.media) {
+                    // If the 'when' element has a 'media' attribute, register a callback with enquire.js
+                    enquire.register(when.media, {
+                        match: () => {
+                            console.log(`When element ${index + 1} has been processed.`);
+                            this.processStatements(when.statements);
+                        }
+                    });
+                } else {
+                    // If the 'when' element doesn't have a 'media' attribute, process its statements immediately
+                    console.log(`When element ${index + 1} has been processed.`);
+                    this.processStatements(when.statements);
+                }
+            });
+        },
         processStatements: function (statements) {
-            // Process the statements and return the result
-            // This function needs to be implemented
+            statements.forEach(statement => {
+                switch (statement.tag) {
+                    case 'select-all':
+                        var targets = statement.targets;
+                        statement.children.forEach(child => {
+                            if (child.tag === 'css') {
+                                this.processCssStatement(child, targets);
+                            }
+                            // ... handle other child statement types ...
+                        });
+                        break;
+                    // ... handle other statement types ...
+                }
+            });
+        },
+        processCssStatement: function (statement, targets) {
+            var cssProperties = {};
+            statement.children.forEach(child => {
+                cssProperties[child.tag] = child.text;
+            });
+            targets.forEach(target => {
+                $(target).css(cssProperties);
+            });
         },
         processTargets: function (statement, statementElement) {
             var targets = [];
@@ -46,7 +84,7 @@
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
                 $(targetsAttr.value).each((_, element) => {
-                    targets.push(this.processStatements($(element).children()));
+                    targets.push(element);
                 });
             }
             // Case 2: innertext value of a <targets> child of a <select-all> tag
@@ -86,7 +124,7 @@
     // Call the indexWhens method when the window has loaded
     $(window).on('load', function () {
         hijinx.indexWhens();
-        //hijinx.processSets();
+        hijinx.processWhens();
         console.log('hijinx:', hijinx);
     });
 })(jQuery);
