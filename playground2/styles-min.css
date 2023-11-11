@@ -34,6 +34,7 @@ body {
   background-color: var(--mobiusEditorBackgroundColor) !important;
   color: var(--mobiusEditorColor) !important;
   font-family: Monolisa;
+  font-size: 14px;
 }
 
 .CodeMirror-gutters {
@@ -63,7 +64,7 @@ body {
 }
 
 .cm-bracket,
-.cm-s-html .cm-tag.cm-bracket {
+.cm-s-default .cm-tag.cm-bracket {
   color: var(--mobiusEditorBracketColor) !important;
 }
 

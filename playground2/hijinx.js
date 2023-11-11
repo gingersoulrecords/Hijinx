@@ -21,7 +21,7 @@
                     attributes: Array.from(statementElement.attributes).map(attr => ({ name: attr.name, value: attr.value })),
                     children: this.indexStatements($(statementElement))
                 };
-                if (statement.tag === 'select-all') {
+                if (statement.tag === 'select-all' || statement.tag === 'set') {
                     statement.targets = this.processTargets(statement, $(statementElement));
                 }
                 if (statement.children.length === 0) {
@@ -36,57 +36,46 @@
             });
             return statements;
         },
-        processSets: function () {
-            this.whens.forEach(when => {
-                when.statements.forEach(statement => {
-                    if (statement.tag === 'set') {
-                        var setName = statement.attributes.find(attr => attr.name === 'name').value;
-                        var setValue = this.processStatements($(statement.children));
-                        this.sets.push({ name: setName, value: setValue });
-                    }
-                });
-            });
-        },
         processStatements: function (statements) {
             // Process the statements and return the result
             // This function needs to be implemented
         },
         processTargets: function (statement, statementElement) {
-            var targets;
+            var targets = [];
             // Case 1: 'targets' attribute on a <select-all> tag
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
-                targets = $(targetsAttr.value);
-                if (targets.length === 0) {
-                    console.log(`Warning: No elements found for selector "${targetsAttr.value}" in <select-all> tag's "targets" attribute.`);
-                } else {
-                    console.log('case 1: targets =', targets);
-                }
+                $(targetsAttr.value).each((_, element) => {
+                    targets.push(this.processStatements($(element).children()));
+                });
             }
             // Case 2: innertext value of a <targets> child of a <select-all> tag
             var targetsChild = statement.children.find(child => child.tag === 'targets');
             if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
-                targets = $(statementElement.find('targets').text());
-                if (targets.length === 0) {
-                    console.log(`Warning: No elements found for selector "${targetsChild.text}" in <targets> child tag.`);
-                } else {
-                    console.log('case 2: targets =', targets);
+                targets.push($(statementElement.find('targets').text()));
+            }
+            // Case 3: jQuery product of a <targets> child's 'foreach' attribute
+            if (targetsChild && targetsChild.attributes) {
+                var foreachAttr = targetsChild.attributes.find(attr => attr.name === 'for-each');
+                if (foreachAttr) {
+                    $(foreachAttr.value).each((_, element) => {
+                        var target = $(element);
+                        targetsChild.children.forEach(child => {
+                            target = target[child.tag](child.text);
+                        });
+                        targets.push(target);
+                    });
                 }
             }
-            // Case 3: jQuery product of a <targets> child's 'select-all' attribute
-            if (targetsChild && targetsChild.attributes) {
-                var selectAllAttr = targetsChild.attributes.find(attr => attr.name === 'select-all');
-                if (selectAllAttr) {
-                    targets = $(selectAllAttr.value);
-                    targetsChild.children.forEach(child => {
-                        targets = targets[child.tag](child.text);
-                    });
-                    if (targets.length === 0) {
-                        console.log(`Warning: No elements found for selector "${selectAllAttr.value}" in <targets> child tag's "select-all" attribute.`);
-                    } else {
-                        console.log('case 3: targets =', targets);
-                    }
+
+            // If the statement is a 'set' tag, store the targets in hijinx.sets
+            if (statement.tag === 'set') {
+                var selectAllChild = statement.children.find(child => child.tag === 'select-all');
+                if (selectAllChild) {
+                    targets = this.processTargets(selectAllChild, $(selectAllChild.children));
                 }
+                var setName = statement.attributes.find(attr => attr.name === 'name').value;
+                this.sets[setName] = targets;
             }
             return targets;
         }
@@ -97,7 +86,7 @@
     // Call the indexWhens method when the window has loaded
     $(window).on('load', function () {
         hijinx.indexWhens();
-        hijinx.processSets();
+        //hijinx.processSets();
         console.log('hijinx:', hijinx);
     });
 })(jQuery);

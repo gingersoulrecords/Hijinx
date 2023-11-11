@@ -29,7 +29,7 @@
 
 </head>
 
-<body class="p-32">
+<body class="p-32 bg-gray-900 text-gray-100">
 
     <div class="grid grid-cols-2 gap-16">
         <!-- elements -->
@@ -59,6 +59,10 @@
                 <a class="underline" href="https://google.com">Google</a>
             </div>
 
+            <div class="card border p-4">
+                <a class="underline" href="https://wordpress.org">Google</a>
+            </div>
+
         </div>
 
         <!-- code -->
@@ -73,9 +77,16 @@
     </select-all>
 </when>
 
-<!-- this code will make all h2's blue and Georgia, and will add two attributes: name="data-poo" and value="bar"
--->
+<when event="load" media="(max-width:767px)">
+    <select-all targets="h1">
+        <css>
+            <color>blue</color>
+        </css>
+    </select-all>
+</when>
+
 <when event="load">
+
     <select-all>
         <targets>h2</targets>
         <css>
@@ -88,20 +99,18 @@
         </attr>
     </select-all>
 
-
     <set name="elLinks">
-        <select-all targets=".card">
-            <find>a</find>
-            <attr>href</attr>
+        <select-all>
+            <targets for-each=".card">
+                <find>a</find>
+                <attr>href</attr>
+            </targets>
         </select-all>
     </set>
 
-    <!--
-this code will make all h3s that precede a p tag red with font-size 16px.
 
--->
     <select-all>
-        <targets select-all="p">
+        <targets for-each="p">
             <prev>h3</prev>
         </targets>
         <css>
@@ -153,6 +162,42 @@ this code will make all h3s that precede a p tag red with font-size 16px.
             document.getElementById("output").innerHTML = editor.getValue();
         }
 
+        var mobiusOverlay = {
+            token: function (stream) {
+                var ch = stream.peek();
+
+                // Tokenize curly braces
+                if (ch === "{" || ch === "}") {
+                    stream.next();
+                    return "brace";
+                }
+
+                // Tokenize square braces
+                if (ch === "[" || ch === "]") {
+                    stream.next();
+                    return "brace";
+                }
+
+                // Tokenize parentheses
+                if (ch === "(" || ch === ")") {
+                    stream.next();
+                    return "parenthesis";
+                }
+
+                // Tokenize colons
+                if (ch === ":") {
+                    stream.next();
+                    return "colon";
+                }
+
+                // Move the stream position if none of the above tokens match
+                while (stream.next() != null &&
+                    !["{", "}", "[", "]", "(", ":", ")"].includes(stream.peek())) { }
+
+                return null;
+            }
+        };
+
         // Initialize CodeMirror on the textarea with HTML mode
         var editor = CodeMirror.fromTextArea(document.getElementById("input-textarea"), {
             mode: "xml", // Set mode to XML for HTML syntax highlighting
@@ -160,6 +205,9 @@ this code will make all h3s that precede a p tag red with font-size 16px.
             lineNumbers: true,
             lineWrapping: true,
         });
+
+        editor.addOverlay(mobiusOverlay);
+
 
         // Event listener to update the output element on editor changes
         editor.on("change", function (instance) {
