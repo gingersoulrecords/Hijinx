@@ -3,14 +3,17 @@
         whens: [],
         sets: [],
         indexWhens: function () {
-            var whenElements = $('when');
-            whenElements.each((_, whenElement) => {
-                var when = {
-                    event: $(whenElement).attr('event'),
-                    media: $(whenElement).attr('media'),
-                    statements: this.indexStatements($(whenElement))
-                };
-                hijinx.whens.push(when);
+            return new Promise((resolve, reject) => {
+                var whenElements = $('when');
+                whenElements.each((_, whenElement) => {
+                    var when = {
+                        event: $(whenElement).attr('event'),
+                        media: $(whenElement).attr('media'),
+                        statements: this.indexStatements($(whenElement))
+                    };
+                    hijinx.whens.push(when);
+                });
+                resolve();
             });
         },
         indexStatements: function (parentElement) {
@@ -36,21 +39,23 @@
             });
             return statements;
         },
+
         processWhens: function () {
-            this.whens.forEach((when, index) => {
-                if (when.media) {
-                    // If the 'when' element has a 'media' attribute, register a callback with enquire.js
-                    enquire.register(when.media, {
-                        match: () => {
-                            console.log(`When element ${index + 1} has been processed.`);
-                            this.processStatements(when.statements);
-                        }
-                    });
-                } else {
-                    // If the 'when' element doesn't have a 'media' attribute, process its statements immediately
-                    console.log(`When element ${index + 1} has been processed.`);
-                    this.processStatements(when.statements);
-                }
+            return new Promise((resolve, reject) => {
+                this.whens.forEach((when, index) => {
+                    if (when.media) {
+                        enquire.register(when.media, {
+                            match: () => {
+                                console.log(`When element ${index + 1} has been processed.`);
+                                this.processStatements(when.statements);
+                            }
+                        });
+                    } else {
+                        console.log(`When element ${index + 1} has been processed.`);
+                        this.processStatements(when.statements);
+                    }
+                });
+                resolve();
             });
         },
         processStatements: function (statements) {
@@ -63,12 +68,20 @@
                                 this.processCssStatement(child, targets);
                             } else if (child.tag === 'attr') {
                                 this.processAttrStatement(child, targets);
+                            } else if (child.tag === 'add-class') {
+                                this.processAddClassStatement(child, targets);
                             }
                             // ... handle other child statement types ...
                         });
                         break;
                     // ... handle other statement types ...
                 }
+            });
+        },
+        processAddClassStatement: function (statement, targets) {
+            var className = statement.text;
+            targets.forEach(target => {
+                $(target).addClass(className);
             });
         },
         processAttrStatement: function (statement, targets) {
@@ -131,8 +144,9 @@
             return targets;
         },
         refresh: function () {
-            this.indexWhens();
-            this.processWhens();
+            Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
+                console.log('indexWhens and processWhens have finished processing');
+            });
         }
     };
 

@@ -30,6 +30,10 @@ body {
   --mobiusEditorVariable3Color: #c991e7; /* root in :root { */
 }
 
+body {
+  background: #111;
+}
+
 .CodeMirror {
   background-color: var(--mobiusEditorBackgroundColor) !important;
   color: var(--mobiusEditorColor) !important;

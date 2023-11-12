@@ -29,7 +29,7 @@
 
 </head>
 
-<body class="p-8 md:p-16 lg:p-32 bg-gray-900 text-gray-100">
+<body class="p-8 md:p-16 lg:p-32 text-gray-100">
 
     <div class="grid md:grid-cols-2 gap-16">
         <!-- elements -->
@@ -68,6 +68,16 @@
         <!-- code -->
         <div>
             <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
+<when event="done">
+    <select-all targets="body">
+        <!-- <add-class>transform rotate-6</add-class> -->
+        <css>
+            <background>
+                black
+            </background>
+    </select-all>
+
+</when>
 
 <when event="load" media="(min-width:768px)">
     <select-all targets="h1">
@@ -113,14 +123,7 @@
         </css>
     </select-all>
 
-
-
-
-</when>
-
-<!--
-
-        <set name="elLinks">
+    <set name="elLinks">
         <select-all>
             <targets for-each=".card">
                 <find>a</find>
@@ -128,15 +131,20 @@
             </targets>
         </select-all>
     </set>
+
+
+</when>
+
+<!--
+
+
     <select-all targets="p">
         <add-class>underline uppercase</add-class>
     </select-all>
 
-    <when event="done">
-    <select-all targets="p">
-        <add-class>transform rotate-6</add-class>
-    </select-all>
-</when> -->
+    -->
+
+
     </textarea>
         </div>
     </div>
