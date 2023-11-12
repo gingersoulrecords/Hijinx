@@ -47,18 +47,22 @@
                         enquire.register(when.media, {
                             match: () => {
                                 console.log(`When element ${index + 1} has been processed.`);
-                                this.processStatements(when.statements);
+                                this.processStatements(when.statements, index);
+                            },
+                            unmatch: () => {
+                                console.log(`When element ${index + 1} has been unprocessed.`);
+                                $(`.when-${index}`).off('click').removeClass(`when-${index}`);
                             }
                         });
                     } else {
                         console.log(`When element ${index + 1} has been processed.`);
-                        this.processStatements(when.statements);
+                        this.processStatements(when.statements, index);
                     }
                 });
                 resolve();
             });
         },
-        processStatements: function (statements) {
+        processStatements: function (statements, whenIndex) {
             statements.forEach(statement => {
                 switch (statement.tag) {
                     case 'select-all':
@@ -70,6 +74,8 @@
                                 this.processAttrStatement(child, targets);
                             } else if (child.tag === 'add-class') {
                                 this.processAddClassStatement(child, targets);
+                            } else if (child.tag === 'on-click') {
+                                this.processOnClickStatement(child, targets, whenIndex);
                             }
                             // ... handle other child statement types ...
                         });
@@ -104,6 +110,15 @@
                 $(target).css(cssProperties);
             });
         },
+        processOnClickStatement: function (statement, targets, whenIndex) {
+            var code = statement.text;
+            targets.forEach(target => {
+                $(target).addClass(`when-${whenIndex}`);
+                $(target).on('click', function () {
+                    eval(code);
+                });
+            });
+        },
         processTargets: function (statement, statementElement) {
             var targets = [];
             // Case 1: 'targets' attribute on a <select-all> tag
@@ -120,9 +135,9 @@
             }
             // Case 3: jQuery product of a <targets> child's 'foreach' attribute
             if (targetsChild && targetsChild.attributes) {
-                var foreachAttr = targetsChild.attributes.find(attr => attr.name === 'for-each');
-                if (foreachAttr) {
-                    $(foreachAttr.value).each((_, element) => {
+                var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
+                if (eachAttr) {
+                    $(eachAttr.value).each((_, element) => {
                         var target = $(element);
                         targetsChild.children.forEach(child => {
                             target = target[child.tag](child.text);

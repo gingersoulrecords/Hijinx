@@ -93,6 +93,15 @@
             <color>blue</color>
         </css>
     </select-all>
+
+<!--note that this is in a media query and should probably be unbound when it doesn't match the media query-->
+
+    <select-all>
+        <targets>h1</targets>
+        <on-click>
+            alert('You clicked an H1!');
+        </on-click>
+    </select-all>
 </when>
 
 
@@ -114,7 +123,7 @@
 
 
     <select-all>
-        <targets for-each="p">
+        <targets each="p">
             <prev>h3</prev>
         </targets>
         <css>
@@ -125,7 +134,7 @@
 
     <set name="elLinks">
         <select-all>
-            <targets for-each=".card">
+            <targets each=".card">
                 <find>a</find>
                 <attr>href</attr>
             </targets>
