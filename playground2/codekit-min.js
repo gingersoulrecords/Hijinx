@@ -61,11 +61,24 @@
                         statement.children.forEach(child => {
                             if (child.tag === 'css') {
                                 this.processCssStatement(child, targets);
+                            } else if (child.tag === 'attr') {
+                                this.processAttrStatement(child, targets);
                             }
                             // ... handle other child statement types ...
                         });
                         break;
                     // ... handle other statement types ...
+                }
+            });
+        },
+        processAttrStatement: function (statement, targets) {
+            var attrProperties = {};
+            statement.children.forEach(child => {
+                attrProperties[child.tag] = child.text;
+            });
+            targets.forEach(target => {
+                for (var attr in attrProperties) {
+                    $(target).attr(attr, attrProperties[attr]);
                 }
             });
         },
@@ -116,6 +129,10 @@
                 this.sets[setName] = targets;
             }
             return targets;
+        },
+        refresh: function () {
+            this.indexWhens();
+            this.processWhens();
         }
     };
 
@@ -123,8 +140,7 @@
 
     // Call the indexWhens method when the window has loaded
     $(window).on('load', function () {
-        hijinx.indexWhens();
-        hijinx.processWhens();
+        hijinx.refresh();
         console.log('hijinx:', hijinx);
     });
 })(jQuery);

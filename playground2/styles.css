@@ -37,6 +37,34 @@ body {
   font-size: 14px;
 }
 
+.CodeMirror-cursor {
+  border-left: 2px solid transparent !important;
+}
+
+@keyframes cursorpulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.CodeMirror-cursor:before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  left: -4px;
+  animation: cursorpulse 1s ease-out infinite;
+  animation-delay: 0.75s;
+}
+
+.CodeMirror-cursor:before {
+  background: #edec13;
+}
+
 .CodeMirror-gutters {
   background-color: var(--mobiusEditorGutterBackgroundColor) !important;
   border-color: var(--mobiusEditorGutterBorderColor) !important;
