@@ -51,7 +51,6 @@
                             },
                             unmatch: () => {
                                 console.log(`When element ${index + 1} has been unprocessed.`);
-                                $(`.when-${index}`).off('click').removeClass(`when-${index}`);
                             }
                         });
                     } else {
@@ -62,6 +61,27 @@
                 resolve();
             });
         },
+        // processStatements: function (statements, whenIndex) {
+        //     statements.forEach(statement => {
+        //         switch (statement.tag) {
+        //             case 'select-all':
+        //                 var targets = statement.targets;
+        //                 statement.children.forEach(child => {
+        //                     if (child.tag === 'css') {
+        //                         this.processCssStatement(child, targets);
+        //                     } else if (child.tag === 'attr') {
+        //                         this.processAttrStatement(child, targets);
+        //                     } else if (child.tag === 'add-class') {
+        //                         this.processAddClassStatement(child, targets);
+        //                     }
+        //                     // ... handle other child statement types ...
+        //                 });
+        //                 break;
+        //             // ... handle other statement types ...
+        //         }
+        //     });
+        // },
+
         processStatements: function (statements, whenIndex) {
             statements.forEach(statement => {
                 switch (statement.tag) {
@@ -84,6 +104,16 @@
                 }
             });
         },
+
+        processOnClickStatement: function (statement, targets, whenIndex) {
+            targets.forEach(target => {
+                $(target).addClass(`when-${whenIndex}`).on('click', () => {
+                    console.log('Element clicked');
+                    this.processStatements(statement.children, whenIndex);
+                });
+            });
+        },
+
         processAddClassStatement: function (statement, targets) {
             var className = statement.text;
             targets.forEach(target => {
@@ -110,28 +140,19 @@
                 $(target).css(cssProperties);
             });
         },
-        processOnClickStatement: function (statement, targets, whenIndex) {
-            var code = statement.text;
-            targets.forEach(target => {
-                $(target).addClass(`when-${whenIndex}`);
-                $(target).on('click', function () {
-                    eval(code);
-                });
-            });
-        },
         processTargets: function (statement, statementElement) {
             var targets = [];
             // Case 1: 'targets' attribute on a <select-all> tag
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
                 $(targetsAttr.value).each((_, element) => {
-                    targets.push(element);
+                    targets.push($(element));
                 });
             }
             // Case 2: innertext value of a <targets> child of a <select-all> tag
             var targetsChild = statement.children.find(child => child.tag === 'targets');
             if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
-                targets.push($(statementElement.find('targets').text()));
+                targets.push($(statementElement.children('targets').text()));
             }
             // Case 3: jQuery product of a <targets> child's 'foreach' attribute
             if (targetsChild && targetsChild.attributes) {
@@ -158,7 +179,23 @@
             }
             return targets;
         },
+        // refresh: function () {
+        //     Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
+        //         console.log('indexWhens and processWhens have finished processing');
+        //     });
+        // }
         refresh: function () {
+            // Unbind all events that were bound by hijinx and remove the class
+            $('[class^="when-"]').each(function () {
+                $(this).off('click').removeClass(function (index, className) {
+                    return (className.match(/(^|\s)when-\S+/g) || []).join(' ');
+                });
+            });
+
+            // Clear the whens array
+            this.whens = [];
+
+            // Re-bind the events per the HTML
             Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
                 console.log('indexWhens and processWhens have finished processing');
             });

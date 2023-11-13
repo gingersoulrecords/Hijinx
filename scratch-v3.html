@@ -28,11 +28,21 @@
 
 </select-all>
 
-$('p').prev('h2').css({
-'color': 'red',
-'font-size': '16px'
-});
 
+
+<!--
+this code will make all h3s that precede a p tag red with font-size 16px.
+
+-->
+<select-all>
+    <targets select-all="p">
+        <prev>h3</prev>
+    </targets>
+    <css>
+        <color>orange</color>
+        <font-style>italic</font-style>
+    </css>
+</select-all>
 
 <!--
 

@@ -67,84 +67,87 @@
 
         <!-- code -->
         <div>
-            <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10"><!-- this code will make all h1's red -->
-<when event="done">
+            <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10">
+
+              <when event="done">
     <select-all targets="body">
-        <!-- <add-class>transform rotate-6</add-class> -->
-        <css>
-            <background>
-                black
-            </background>
+      <css>
+        <background>
+          black
+        </background>
+      </css>
     </select-all>
 
-</when>
+  </when>
 
-<when event="load" media="(min-width:768px)">
+  <when event="load" media="(min-width:768px)">
     <select-all targets="h1">
-        <css>
-            <color>red</color>
-        </css>
+      <css>
+        <color>red</color>
+      </css>
     </select-all>
-</when>
+  </when>
 
-<when event="load" media="(max-width:767px)">
+  <when event="load" media="(max-width:767px)">
     <select-all targets="h1">
-        <css>
-            <color>blue</color>
-        </css>
+      <css>
+        <color>blue</color>
+      </css>
     </select-all>
 
-<!--note that this is in a media query and should probably be unbound when it doesn't match the media query-->
-
     <select-all>
-        <targets>h1</targets>
-        <on-click>
-            alert('You clicked an H1!');
-        </on-click>
+      <targets>h1</targets>
+      <on-click>
+        <select-all>
+            <targets>h3</targets>
+
+            <css>
+                <color>yellow</color>
+            </css>
+        </select-all>
+      </on-click>
     </select-all>
-</when>
+  </when>
 
 
-
- <when event="load">
+  <when event="load">
 
     <select-all>
-        <targets>h2</targets>
-        <css>
-            <color>blue</color>
-            <font-family>Georgia</font-family>
-        </css>
-        <attr>
-            <name>data-poo</name>
-            <value>bar</value>
-        </attr>
+      <targets>h2</targets>
+      <css>
+        <color>blue</color>
+        <font-family>Georgia</font-family>
+      </css>
+      <attr>
+        <name>data-poo</name>
+        <value>bar</value>
+      </attr>
     </select-all>
 
 
-
     <select-all>
-        <targets each="p">
-            <prev>h3</prev>
-        </targets>
-        <css>
-            <color>orange</color>
-            <font-style>italic</font-style>
-        </css>
+      <targets each="p">
+        <prev>h3</prev>
+      </targets>
+      <css>
+        <color>orange</color>
+        <font-style>italic</font-style>
+      </css>
     </select-all>
 
     <set name="elLinks">
-        <select-all>
-            <targets each=".card">
-                <find>a</find>
-                <attr>href</attr>
-            </targets>
-        </select-all>
+      <select-all>
+        <targets each=".card">
+          <find>a</find>
+          <attr>href</attr>
+        </targets>
+      </select-all>
     </set>
 
 
-</when>
+  </when>
 
-<!--
+  <!--
 
 
     <select-all targets="p">
@@ -152,8 +155,6 @@
     </select-all>
 
     -->
-
-
     </textarea>
         </div>
     </div>
