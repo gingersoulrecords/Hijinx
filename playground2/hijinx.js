@@ -51,6 +51,7 @@
                             },
                             unmatch: () => {
                                 console.log(`When element ${index + 1} has been unprocessed.`);
+                                $(`.when-${index}`).off('click.hijinx').removeClass(`when-${index}`);
                             }
                         });
                     } else {
@@ -107,7 +108,7 @@
 
         processOnClickStatement: function (statement, targets, whenIndex) {
             targets.forEach(target => {
-                $(target).addClass(`when-${whenIndex}`).on('click', () => {
+                $(target).addClass(`when-${whenIndex}`).on('click.hijinx', () => {
                     console.log('Element clicked');
                     this.processStatements(statement.children, whenIndex);
                 });
@@ -187,7 +188,7 @@
         refresh: function () {
             // Unbind all events that were bound by hijinx and remove the class
             $('[class^="when-"]').each(function () {
-                $(this).off('click').removeClass(function (index, className) {
+                $(this).off('click.hijinx').removeClass(function (index, className) {
                     return (className.match(/(^|\s)when-\S+/g) || []).join(' ');
                 });
             });
