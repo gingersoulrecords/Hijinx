@@ -69,7 +69,7 @@
         <div>
             <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10">
 
-              <when event="done">
+  <when event="done">
     <select-all targets="body">
       <css>
         <background>
@@ -100,10 +100,11 @@
       <on-click>
         <select-all>
             <targets>h3</targets>
-
-            <css>
-                <color>yellow</color>
-            </css>
+            <insert-after>
+                <select-all>
+                    <targets>p</targets>
+                </select-all>
+            </insert-after>
         </select-all>
       </on-click>
     </select-all>

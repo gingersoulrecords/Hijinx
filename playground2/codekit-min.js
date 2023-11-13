@@ -46,43 +46,22 @@
                     if (when.media) {
                         enquire.register(when.media, {
                             match: () => {
-                                console.log(`When element ${index + 1} has been processed.`);
+                                //console.log(`When element ${index + 1} has been processed.`);
                                 this.processStatements(when.statements, index);
                             },
                             unmatch: () => {
-                                console.log(`When element ${index + 1} has been unprocessed.`);
+                                //console.log(`When element ${index + 1} has been unprocessed.`);
                                 $(`.when-${index}`).off('click.hijinx').removeClass(`when-${index}`);
                             }
                         });
                     } else {
-                        console.log(`When element ${index + 1} has been processed.`);
+                        //console.log(`When element ${index + 1} has been processed.`);
                         this.processStatements(when.statements, index);
                     }
                 });
                 resolve();
             });
         },
-        // processStatements: function (statements, whenIndex) {
-        //     statements.forEach(statement => {
-        //         switch (statement.tag) {
-        //             case 'select-all':
-        //                 var targets = statement.targets;
-        //                 statement.children.forEach(child => {
-        //                     if (child.tag === 'css') {
-        //                         this.processCssStatement(child, targets);
-        //                     } else if (child.tag === 'attr') {
-        //                         this.processAttrStatement(child, targets);
-        //                     } else if (child.tag === 'add-class') {
-        //                         this.processAddClassStatement(child, targets);
-        //                     }
-        //                     // ... handle other child statement types ...
-        //                 });
-        //                 break;
-        //             // ... handle other statement types ...
-        //         }
-        //     });
-        // },
-
         processStatements: function (statements, whenIndex) {
             statements.forEach(statement => {
                 switch (statement.tag) {
@@ -97,6 +76,8 @@
                                 this.processAddClassStatement(child, targets);
                             } else if (child.tag === 'on-click') {
                                 this.processOnClickStatement(child, targets, whenIndex);
+                            } else if (child.tag === 'insert-after') {
+                                this.processInsertAfterStatement(child, targets);
                             }
                             // ... handle other child statement types ...
                         });
@@ -106,14 +87,7 @@
             });
         },
 
-        processOnClickStatement: function (statement, targets, whenIndex) {
-            targets.forEach(target => {
-                $(target).addClass(`when-${whenIndex}`).on('click.hijinx', () => {
-                    console.log('Element clicked');
-                    this.processStatements(statement.children, whenIndex);
-                });
-            });
-        },
+
 
         processAddClassStatement: function (statement, targets) {
             var className = statement.text;
@@ -139,6 +113,24 @@
             });
             targets.forEach(target => {
                 $(target).css(cssProperties);
+            });
+        },
+        processInsertAfterStatement: function (statement, targets) {
+            var insertAfterTargets = statement.children.find(child => child.tag === 'select-all').targets;
+            targets.forEach(target => {
+                insertAfterTargets.forEach(insertAfterTarget => {
+                    $(target).insertAfter(insertAfterTarget);
+                });
+            });
+        },
+        processOnClickStatement: function (statement, targets, whenIndex) {
+            targets.forEach(target => {
+                $(target).addClass(`when-${whenIndex}`).on('click.hijinx', () => {
+                    console.log('Element clicked');
+                    console.log(statement.children);
+
+                    this.processStatements(statement.children, whenIndex);
+                });
             });
         },
         processTargets: function (statement, statementElement) {
@@ -180,11 +172,6 @@
             }
             return targets;
         },
-        // refresh: function () {
-        //     Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
-        //         console.log('indexWhens and processWhens have finished processing');
-        //     });
-        // }
         refresh: function () {
             // Unbind all events that were bound by hijinx and remove the class
             $('[class^="when-"]').each(function () {
