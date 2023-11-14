@@ -55,13 +55,26 @@
                 quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
                 necessitatibus.</p>
 
-            <div class="card border p-4">
-                <a class="underline" href="https://google.com">Google</a>
+
+            <div class="flex gap-4">
+                <div class="card border p-4 flex-1">
+                    <a class="underline" href="https://google.com">Google</a>
+                    <p class="border border-red-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                        Impedit
+                        deleniti repudiandae, eveniet tempore repellat atque laboriosam eaque! Sint ab deserunt,
+                        cupiditate
+                        nulla amet consectetur praesentium inventore laboriosam commodi a aspernatur.</p>
+                </div>
+
+                <div class="card border p-4 flex-1">
+                    <a class="underline" href="https://wordpress.org">WordPress</a>
+                    <p class="border border-green-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                        Impedit
+                        deleniti repudiandae, eveniet tempore repellat atque laboriosam eaque!</p>
+                </div>
+
             </div>
 
-            <div class="card border p-4">
-                <a class="underline" href="https://wordpress.org">WordPress</a>
-            </div>
 
         </div>
 
@@ -72,9 +85,7 @@
   <when event="done">
     <select-all targets="body">
       <css>
-        <background>
-          black
-        </background>
+        <opacity>1</opacity>
       </css>
     </select-all>
 
@@ -144,6 +155,29 @@
         </targets>
       </select-all>
     </set>
+
+    <select-all targets=".matchme">
+        <match-height></match-height>
+    </select-all>
+
+    <when event="load">
+        <select-all targets="h1">
+            <on-click>
+                <select-all targets="h3">
+                    <hide></hide>
+                </select-all>
+            </on-click>
+        </select-all>
+
+        <select-all targets="h2">
+            <on-click>
+                <select-all targets="h3">
+                    <show></show>
+                </select-all>
+            </on-click>
+        </select-all>
+    </when>
+
 
 
   </when>
@@ -258,6 +292,11 @@
     <!-- Enquire.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.6/enquire.min.js"
         integrity="sha512-1Nnt0yKXV2U0kJ3Wm/FDDO13GRmL6v5BK2rL05eH7gPS91fVh//y477BlA35U/7zCSdWBCCbwoF5LQc8deFlgw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- jQuery Match Height -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"
+        integrity="sha512-/bOVV1DV1AQXcypckRwsR9ThoCj7FqTV2/0Bm79bL3YSyLkVideFLE3MIZkq1u5t28ke1c0n31WYCOrO01dsUg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Custom scripts -->

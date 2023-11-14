@@ -62,33 +62,37 @@
                 resolve();
             });
         },
-        processStatements: function (statements, whenIndex) {
-            statements.forEach(statement => {
-                switch (statement.tag) {
-                    case 'select-all':
-                        var targets = statement.targets;
-                        statement.children.forEach(child => {
-                            if (child.tag === 'css') {
-                                this.processCssStatement(child, targets);
-                            } else if (child.tag === 'attr') {
-                                this.processAttrStatement(child, targets);
-                            } else if (child.tag === 'add-class') {
-                                this.processAddClassStatement(child, targets);
-                            } else if (child.tag === 'on-click') {
-                                this.processOnClickStatement(child, targets, whenIndex);
-                            } else if (child.tag === 'insert-after') {
-                                this.processInsertAfterStatement(child, targets);
-                            }
-                            // ... handle other child statement types ...
-                        });
-                        break;
-                    // ... handle other statement types ...
-                }
-            });
+        init: function () {
+            this.tagHandlers = {
+                'css': this.processCssStatement.bind(this),
+                'attr': this.processAttrStatement.bind(this),
+                'add-class': this.processAddClassStatement.bind(this),
+                'on-click': this.processOnClickStatement.bind(this),
+                'insert-after': this.processInsertAfterStatement.bind(this),
+                'match-height': this.processMatchHeightStatement.bind(this),
+                'show': this.processShowStatement.bind(this),
+                'hide': this.processHideStatement.bind(this),
+
+                // ... add handlers for other tags here ...
+            };
         },
 
-
-
+        processStatements: function (statements, whenIndex) {
+            statements.forEach(statement => {
+                if (statement.tag === 'select-all') {
+                    var targets = statement.targets;
+                    statement.children.forEach(child => {
+                        // Get the handler for the current tag
+                        var handler = this.tagHandlers[child.tag];
+                        if (handler) {
+                            // Call the handler with the necessary arguments
+                            handler(child, targets, whenIndex);
+                        }
+                    });
+                }
+                // ... handle other statement types ...
+            });
+        },
         processAddClassStatement: function (statement, targets) {
             var className = statement.text;
             targets.forEach(target => {
@@ -123,6 +127,11 @@
                 });
             });
         },
+        processMatchHeightStatement: function (statement, targets, whenIndex) {
+            if (statement.targetsSelector) {
+                $(statement.targetsSelector).matchHeight();
+            }
+        },
         processOnClickStatement: function (statement, targets, whenIndex) {
             targets.forEach(target => {
                 $(target).addClass(`when-${whenIndex}`).on('click.hijinx', () => {
@@ -133,6 +142,17 @@
                 });
             });
         },
+        processShowStatement: function (statement, targets) {
+            targets.forEach(target => {
+                $(target).show();
+            });
+        },
+
+        processHideStatement: function (statement, targets) {
+            targets.forEach(target => {
+                $(target).hide();
+            });
+        },
         processTargets: function (statement, statementElement) {
             var targets = [];
             // Case 1: 'targets' attribute on a <select-all> tag
@@ -140,6 +160,10 @@
             if (targetsAttr) {
                 $(targetsAttr.value).each((_, element) => {
                     targets.push($(element));
+                });
+                statement.targetsSelector = targetsAttr.value;
+                statement.children.forEach(child => {
+                    child.targetsSelector = targetsAttr.value;
                 });
             }
             // Case 2: innertext value of a <targets> child of a <select-all> tag
@@ -173,6 +197,11 @@
             return targets;
         },
         refresh: function () {
+            console.time("Processing time");
+
+            // Initialize tagHandlers
+            this.init();
+
             // Unbind all events that were bound by hijinx and remove the class
             $('[class^="when-"]').each(function () {
                 $(this).off('click.hijinx').removeClass(function (index, className) {
@@ -186,6 +215,7 @@
             // Re-bind the events per the HTML
             Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
                 console.log('indexWhens and processWhens have finished processing');
+                console.timeEnd("Processing time");
             });
         }
     };

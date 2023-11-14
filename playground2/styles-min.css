@@ -32,6 +32,7 @@ body {
 
 body {
   background: #111;
+  opacity: 0;
 }
 
 .CodeMirror {
