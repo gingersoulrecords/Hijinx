@@ -34,6 +34,29 @@
     <div class="grid md:grid-cols-2 gap-16">
         <!-- elements -->
         <div class="flex flex-col gap-8">
+
+            <div class="notification-bar flex justify-between p-2 bg-white text-black">
+                <p>This is the message</p>
+                <button class="close-button">Close</button>
+            </div>
+            <when event="load">
+                <if store="notificationbar" value="closed">
+                    <select-all targets=".notification-bar">
+                        <hide></hide>
+                    </select-all>
+                </if>
+                <select-all targets=".close-button">
+                    <on-click>
+                        <select-all targets=".notification-bar">
+                            <hide></hide>
+                        </select-all>
+                        <store>
+                            <notificationbar>closed</notificationbar>
+                        </store>
+                    </on-click>
+                </select-all>
+            </when>
+
             <h1 class="text-5xl font-bold">
                 Hello World, I’m an H1
             </h1>
@@ -91,7 +114,7 @@
 
   </when>
 
-  <when event="load" media="(min-width:768px)">
+  <!-- <when event="load" media="(min-width:768px)">
     <select-all targets="h1">
       <css>
         <color>red</color>
@@ -119,10 +142,10 @@
         </select-all>
       </on-click>
     </select-all>
-  </when>
+  </when> -->
 
 
-  <when event="load">
+  <!-- <when event="load">
 
     <select-all>
       <targets>h2</targets>
@@ -159,8 +182,9 @@
     <select-all targets=".matchme">
         <match-height></match-height>
     </select-all>
+</when> -->
 
-    <when event="load">
+<!-- <when event="load">
         <select-all targets="h1">
             <on-click>
                 <select-all targets="h3">
@@ -176,11 +200,11 @@
                 </select-all>
             </on-click>
         </select-all>
-    </when>
+    </when> -->
 
 
 
-  </when>
+
 
   <!--
 
@@ -297,6 +321,11 @@
     <!-- jQuery Match Height -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"
         integrity="sha512-/bOVV1DV1AQXcypckRwsR9ThoCj7FqTV2/0Bm79bL3YSyLkVideFLE3MIZkq1u5t28ke1c0n31WYCOrO01dsUg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Store.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/2.0.12/store.everything.min.js"
+        integrity="sha512-zpuvpsrvBAZKlUIbof/0MHSpnIAmb9/eQFM9v7qVfJY5anuvhhsCbZ2JG/QS1Fqw+MmybnOf02PAbiJvoZdrKg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Custom scripts -->
