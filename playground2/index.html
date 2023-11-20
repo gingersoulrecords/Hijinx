@@ -39,7 +39,7 @@
                 <p>This is the message</p>
                 <button class="close-button">Close</button>
             </div>
-            <when event="load">
+            <!-- <when event="load">
                 <if store="notificationbar" value="closed">
                     <select-all targets=".notification-bar">
                         <hide></hide>
@@ -55,7 +55,7 @@
                         </store>
                     </on-click>
                 </select-all>
-            </when>
+            </when> -->
 
             <h1 class="text-5xl font-bold">
                 Hello World, I’m an H1
@@ -68,9 +68,7 @@
                 Hello World, I’m another H2
             </h2>
 
-            <h3>
-                Hello World, I’m an H3
-            </h3>
+
 
             <p class="italic">Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim possimus excepturi ab dolor
                 est
@@ -78,11 +76,20 @@
                 quis quisquam, saepe dignissimos perferendis illum, culpa iure facere vitae corporis alias, omnis
                 necessitatibus.</p>
 
+            <h3 class="text-xl">
+                Hello World, I’m an H3
+            </h3>
+
+            <h4>
+                Hello World, I’m an H4
+            </h4>
+
 
             <div class="flex gap-4">
                 <div class="card border p-4 flex-1">
                     <a class="underline" href="https://google.com">Google</a>
-                    <p class="border border-red-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    <p class="border border-red-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit.
                         Impedit
                         deleniti repudiandae, eveniet tempore repellat atque laboriosam eaque! Sint ab deserunt,
                         cupiditate
@@ -91,19 +98,37 @@
 
                 <div class="card border p-4 flex-1">
                     <a class="underline" href="https://wordpress.org">WordPress</a>
-                    <p class="border border-green-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    <p class="border border-green-500 matchme">Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit.
                         Impedit
                         deleniti repudiandae, eveniet tempore repellat atque laboriosam eaque!</p>
                 </div>
 
             </div>
 
+            <!-- <div class="grid grid-cols-2">
+                <div class="post">
+                    <h3 class="post-title">Post 1</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit deleniti repudiandae, eveniet
+                        tempore repellat atque laboriosam eaque! Sint ab deserunt, cupiditate nulla amet consectetur
+                        praesentium inventore laboriosam commodi a aspernatur.</p>
+                    <a href="https://google.com">Read More</a>
+                </div>
+                <div class="post">
+                    <h3 class="post-title">Post 2</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit deleniti repudiandae, eveniet
+                        tempore repellat atque laboriosam eaque! Sint ab deserunt, cupiditate nulla amet consectetur
+                        praesentium inventore laboriosam commodi a aspernatur.</p>
+                    <a href="https://google.com">Read More</a>
 
-        </div>
+                </div>
 
-        <!-- code -->
-        <div>
-            <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10">
+
+            </div> -->
+
+            <!-- code -->
+            <div>
+                <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10">
 
   <when event="done">
     <select-all targets="body">
@@ -112,7 +137,107 @@
       </css>
     </select-all>
 
+
+
   </when>
+
+<when event="load">
+    <select-all targets=".matchme">
+        <match-height></match-height>
+    </select-all>
+
+    <select-all targets="h1">
+        <css>
+            <color>red</color>
+        </css>
+    </select-all>
+
+    <select-all>
+        <targets>h2</targets>
+        <css>
+            <color>blue</color>
+        </css>
+    </select-all>
+
+    <select-all>
+        <targets each="p">
+            <next>h3</next>
+        </targets>
+        <css>
+            <color>green</color>
+        </css>
+    </select-all>
+
+    <!-- <select-all targets="p">
+        <add-class>underline uppercase</add-class>
+    </select-all> -->
+
+    <!-- <select-all targets="h1">
+        <append-to>.card</append-to>
+    </select-all> -->
+
+    <!-- <select-all>
+         <targets each="p">
+            <next>h3</prev>
+        </targets>
+        <insert-before>
+          <select-all>
+              <targets>h1</targets>
+          </select-all>
+        </insert-before>
+    </select-all>
+
+    <select-all targets="h4">
+        <insert-after>
+            <select-all>
+                <targets>h2</targets>
+            </select-all>
+        </insert-after>
+    </select-all> -->
+
+
+
+          <!-- <select-all targets="h3">
+            <insert-after>
+                <select-all>
+                    <targets>h1</targets>
+                </select-all>
+            </insert-after>
+          </select-all> -->
+
+
+    <select-all targets="h1">
+        <on-click>
+          <select-all>
+              <targets>h3</targets>
+              <insert-after>
+                  <select-all>
+                      <targets each="body">
+                            <find>h2</find>
+                      </targets>
+                  </select-all>
+              </insert-after>
+          </select-all>
+        </on-click>
+      </select-all>
+
+          <select-all targets="h1">
+        <on-click>
+          <select-all>
+              <targets>h3</targets>
+              <insert-after>
+                  <select-all>
+                      <targets each="body">
+                            <find>h2</find>
+                      </targets>
+                  </select-all>
+              </insert-after>
+          </select-all>
+        </on-click>
+      </select-all>
+
+</when>
+
 
   <!-- <when event="load" media="(min-width:768px)">
     <select-all targets="h1">
@@ -179,9 +304,7 @@
       </select-all>
     </set>
 
-    <select-all targets=".matchme">
-        <match-height></match-height>
-    </select-all>
+
 </when> -->
 
 <!-- <when event="load">
@@ -209,132 +332,120 @@
   <!--
 
 
-    <select-all targets="p">
-        <add-class>underline uppercase</add-class>
-    </select-all>
+
 
     -->
     </textarea>
+            </div>
         </div>
-    </div>
 
 
+        <button class="fixed top-0 left-0 px-4 py-2 bg-black text-white mt-8"
+            onclick="hijinx.refresh()">Refresh</button>
 
 
+        <div id="output">
 
 
-
-    <button class="fixed top-0 left-0 px-4 py-2 bg-black text-white mt-8" onclick="hijinx.refresh()">Refresh</button>
-
-
-    <div id="output">
+        </div>
 
 
-    </div>
-
-
-
-
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
-    <script>
-        // Function to update the output with the editor's content
-        function updateOutput(editor) {
-            document.getElementById("output").innerHTML = editor.getValue();
-        }
-
-        var mobiusOverlay = {
-            token: function (stream) {
-                var ch = stream.peek();
-
-                // Tokenize curly braces
-                if (ch === "{" || ch === "}") {
-                    stream.next();
-                    return "brace";
-                }
-
-                // Tokenize square braces
-                if (ch === "[" || ch === "]") {
-                    stream.next();
-                    return "brace";
-                }
-
-                // Tokenize parentheses
-                if (ch === "(" || ch === ")") {
-                    stream.next();
-                    return "parenthesis";
-                }
-
-                // Tokenize colons
-                if (ch === ":") {
-                    stream.next();
-                    return "colon";
-                }
-
-                // Move the stream position if none of the above tokens match
-                while (stream.next() != null &&
-                    !["{", "}", "[", "]", "(", ":", ")"].includes(stream.peek())) { }
-
-                return null;
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
+        <script>
+            // Function to update the output with the editor's content
+            function updateOutput(editor) {
+                document.getElementById("output").innerHTML = editor.getValue();
             }
-        };
 
-        // Initialize CodeMirror on the textarea with HTML mode
-        var editor = CodeMirror.fromTextArea(document.getElementById("input-textarea"), {
-            mode: "xml", // Set mode to XML for HTML syntax highlighting
-            htmlMode: true, // Enable HTML mode in XML
-            lineNumbers: true,
-            lineWrapping: true,
-        });
+            var mobiusOverlay = {
+                token: function (stream) {
+                    var ch = stream.peek();
 
-        editor.addOverlay(mobiusOverlay);
+                    // Tokenize curly braces
+                    if (ch === "{" || ch === "}") {
+                        stream.next();
+                        return "brace";
+                    }
+
+                    // Tokenize square braces
+                    if (ch === "[" || ch === "]") {
+                        stream.next();
+                        return "brace";
+                    }
+
+                    // Tokenize parentheses
+                    if (ch === "(" || ch === ")") {
+                        stream.next();
+                        return "parenthesis";
+                    }
+
+                    // Tokenize colons
+                    if (ch === ":") {
+                        stream.next();
+                        return "colon";
+                    }
+
+                    // Move the stream position if none of the above tokens match
+                    while (stream.next() != null &&
+                        !["{", "}", "[", "]", "(", ":", ")"].includes(stream.peek())) { }
+
+                    return null;
+                }
+            };
+
+            // Initialize CodeMirror on the textarea with HTML mode
+            var editor = CodeMirror.fromTextArea(document.getElementById("input-textarea"), {
+                mode: "xml", // Set mode to XML for HTML syntax highlighting
+                htmlMode: true, // Enable HTML mode in XML
+                lineNumbers: true,
+                lineWrapping: true,
+            });
+
+            editor.addOverlay(mobiusOverlay);
+
+            // Event listener to update the output element on editor changes
+            editor.on("change", function (instance) {
+                updateOutput(instance);
+            });
+
+            // Update the output element on initial page load
+            window.onload = function () {
+                updateOutput(editor);
+                //hijinx.init();
+            };
+        </script>
 
 
-        // Event listener to update the output element on editor changes
-        editor.on("change", function (instance) {
-            updateOutput(instance);
-        });
+        <!-- Alpine.js -->
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.2/cdn.js"
+            integrity="sha512-lNq2c0EZyCnieSFk9jEWqD60SbJY/6MWMaJsEHk1Tq3y8N5c9E9PuNlSq1jhf499bTkTslfexdzcz7zSTk9Qzw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        // Update the output element on initial page load
-        window.onload = function () {
-            updateOutput(editor);
-            //hijinx.init();
-        };
-    </script>
+        <!-- Arrive.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
 
+        <!-- Enquire.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.6/enquire.min.js"
+            integrity="sha512-1Nnt0yKXV2U0kJ3Wm/FDDO13GRmL6v5BK2rL05eH7gPS91fVh//y477BlA35U/7zCSdWBCCbwoF5LQc8deFlgw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Alpine.js -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.2/cdn.js"
-        integrity="sha512-lNq2c0EZyCnieSFk9jEWqD60SbJY/6MWMaJsEHk1Tq3y8N5c9E9PuNlSq1jhf499bTkTslfexdzcz7zSTk9Qzw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- jQuery Match Height -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"
+            integrity="sha512-/bOVV1DV1AQXcypckRwsR9ThoCj7FqTV2/0Bm79bL3YSyLkVideFLE3MIZkq1u5t28ke1c0n31WYCOrO01dsUg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Arrive.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
+        <!-- Store.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/2.0.12/store.everything.min.js"
+            integrity="sha512-zpuvpsrvBAZKlUIbof/0MHSpnIAmb9/eQFM9v7qVfJY5anuvhhsCbZ2JG/QS1Fqw+MmybnOf02PAbiJvoZdrKg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Enquire.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.6/enquire.min.js"
-        integrity="sha512-1Nnt0yKXV2U0kJ3Wm/FDDO13GRmL6v5BK2rL05eH7gPS91fVh//y477BlA35U/7zCSdWBCCbwoF5LQc8deFlgw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- jQuery Match Height -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"
-        integrity="sha512-/bOVV1DV1AQXcypckRwsR9ThoCj7FqTV2/0Bm79bL3YSyLkVideFLE3MIZkq1u5t28ke1c0n31WYCOrO01dsUg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- Store.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/2.0.12/store.everything.min.js"
-        integrity="sha512-zpuvpsrvBAZKlUIbof/0MHSpnIAmb9/eQFM9v7qVfJY5anuvhhsCbZ2JG/QS1Fqw+MmybnOf02PAbiJvoZdrKg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- Custom scripts -->
-    <script src="codekit-min.js"></script>
+        <!-- Custom scripts -->
+        <script src="codekit-min.js"></script>
 
 </body>
 
 </html>
-
 
 
 </body>

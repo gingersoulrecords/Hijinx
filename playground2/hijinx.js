@@ -1,3 +1,11 @@
+//Notes
+
+//for dynamic selectors, you have to loop through the elements and apply the selector to each one. That's why we have to use the 'each' method.
+
+//for simple selectors, you can just use the selector as is and leverage jQuery's ability to apply the selector to all elements that match it.
+
+//use the index as your selector guide in situations where a target doesn't have children.
+
 (function ($) {
     var hijinx = {
         whens: [],
@@ -31,7 +39,7 @@
                     delete statement.children;
                 } else {
                     statement.children = statement.children.map(child => {
-                        child.text = $(statementElement).find(child.tag).text();
+                        child.text = $(statementElement).find(child.tag).text().trim(); // Trim the text here
                         return child;
                     });
                 }
@@ -65,10 +73,12 @@
         init: function () {
             this.tagHandlers = {
                 'add-class': this.processAddClassStatement.bind(this),
+                'append-to': this.processAppendToStatement.bind(this),
                 'attr': this.processAttrStatement.bind(this),
                 'css': this.processCssStatement.bind(this),
                 'hide': this.processHideStatement.bind(this),
                 'insert-after': this.processInsertAfterStatement.bind(this),
+                //'insert-before': this.processInsertBeforeStatement.bind(this),
                 'match-height': this.processMatchHeightStatement.bind(this),
                 'on-click': this.processOnClickStatement.bind(this),
                 'show': this.processShowStatement.bind(this),
@@ -112,6 +122,19 @@
             var className = statement.text;
             targets.forEach(target => {
                 $(target).addClass(className);
+            });
+        },
+        processAppendToStatement: function (statement, targets) {
+            var appendToTargets;
+            if (statement.children.length > 0) {
+                appendToTargets = statement.children.find(child => child.tag === 'select-all').targets;
+            } else {
+                appendToTargets = $(statement.text);
+            }
+            targets.forEach(target => {
+                appendToTargets.forEach(appendToTarget => {
+                    $(target).appendTo(appendToTarget);
+                });
             });
         },
         processAttrStatement: function (statement, targets) {
@@ -165,13 +188,53 @@
             }
         },
         processInsertAfterStatement: function (statement, targets) {
-            var insertAfterTargets = statement.children.find(child => child.tag === 'select-all').targets;
+            console.log('targets', targets);
+            console.log('statement', statement);
+            console.log('statement.children', statement.children);
+            var insertAfterTargets;
+            if (statement.children && statement.children.length > 0) {
+                insertAfterTargets = statement.children.find(child => child.tag === 'select-all').targets;
+            } else {
+                insertAfterTargets = $(statement.text);
+            }
             targets.forEach(target => {
                 insertAfterTargets.forEach(insertAfterTarget => {
                     $(target).insertAfter(insertAfterTarget);
                 });
             });
         },
+
+        // processInsertAfterStatement: function (statement, targets) {
+        //     var insertAfterTargets;
+        //     if (statement.children && statement.children.length > 0) {
+        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
+        //         insertAfterTargets = selectAllChild.targets || $(selectAllChild.attributes.find(attr => attr.name === 'targets').value).toArray();
+        //     } else {
+        //         insertAfterTargets = $(statement.text).toArray();
+        //     }
+        //     targets.forEach(target => {
+        //         insertAfterTargets.forEach(insertAfterTarget => {
+        //             $(target).clone().insertAfter(insertAfterTarget);
+        //         });
+        //     });
+        // },
+        // processInsertBeforeStatement: function (statement, targets) {
+        //     var insertBeforeTargets;
+        //     if (statement.children && statement.children.length > 0) {
+        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
+        //         insertBeforeTargets = selectAllChild.targets || $(selectAllChild.attributes.find(attr => attr.name === 'targets').value).toArray();
+        //     } else {
+        //         insertBeforeTargets = $(statement.text).toArray();
+        //     }
+        //     targets.forEach(target => {
+        //         insertBeforeTargets.forEach(insertBeforeTarget => {
+        //             $(target).clone().insertBefore(insertBeforeTarget);
+        //         });
+        //     });
+        // },
+
+
+
         processMatchHeightStatement: function (statement, targets, whenIndex) {
             if (statement.targetsSelector) {
                 $(statement.targetsSelector).matchHeight();
@@ -244,7 +307,7 @@
             return targets;
         },
         refresh: function () {
-            console.time("Processing time");
+            //console.time("Processing time");
 
             // Initialize tagHandlers
             this.init();
@@ -261,8 +324,8 @@
 
             // Re-bind the events per the HTML
             Promise.all([this.indexWhens(), this.processWhens()]).then(() => {
-                console.log('indexWhens and processWhens have finished processing');
-                console.timeEnd("Processing time");
+                //console.log('indexWhens and processWhens have finished processing');
+                //console.timeEnd("Processing time");
             });
         }
     };
