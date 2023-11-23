@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Editor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/theme/material-palenight.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .CodeMirror {
+            font-family: 'MonoLisa', monospace;
+            font-size: .8rem;
+            padding: 1rem 0;
+        }
+    </style>
+</head>
+
+<body class="p-16 grid grid-cols-2 gap-16 opacity-0">
+    <div id="output" class="col-span-full border border-green-500"></div>
+
+    <!-- Editor 1 -->
+    <textarea id="editor1" class="w-full h-96 border">
+<h1 class="text-2xl font-bold text-center">Hello World</h1>
+<p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+</textarea>
+
+    <!-- Editor 2 -->
+    <textarea id="editor2" class="w-full h-96 border"></textarea>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/xml/xml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/css/css.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+    <script src="process.js"></script>
+
+    <script>
+        // Initialize CodeMirror instances
+        var editor1 = CodeMirror.fromTextArea(document.getElementById("editor1"), {
+            lineNumbers: true,
+            mode: "htmlmixed",
+            theme: "material-palenight",
+            lineWrapping: true
+        });
+
+        var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), {
+            lineNumbers: true,
+            mode: "htmlmixed",
+            readOnly: true,
+            theme: "material-palenight",
+            lineWrapping: true
+        });
+
+
+        // Process HTML and update editor2 and output div
+        editor1.on("change", function () {
+            var processedHTML = processHTML(editor1.getValue());
+            editor2.setValue(processedHTML);
+            $("#output").html(processedHTML);
+        });
+
+        // Execute the processing function when the window loads
+        $(document).ready(function () {
+            var processedHTML = processHTML(editor1.getValue());
+            editor2.setValue(processedHTML);
+            $("#output").html(processedHTML);
+            $("body").removeClass("opacity-0");
+
+        });
+    </script>
+</body>
+
+</html>
