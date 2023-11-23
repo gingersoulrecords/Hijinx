@@ -14,10 +14,10 @@ function processHTML(htmlString) {
     doc.body.querySelectorAll("*").forEach((elem) => {
         const classList = elem.className.split(/\s+/);
         classList.forEach((className) => {
-            const match = className.match(/([a-z0-9\-:]+)?-\[([^\]]+)\]/i);
+            const match = className.match(/([a-z0-9\-:]+)?-\[(.+)\]/i);
             if (match) {
                 const prefix = match[1] || "";
-                const value = match[2];
+                const value = match[2].replace(/_/g, " ");
                 const escapedClassName = escapeClassName(className);
                 if (prefix.startsWith("lg:")) {
                     styleTagContent += `@media (min-width: 1024px) {
