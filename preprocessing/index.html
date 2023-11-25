@@ -9,16 +9,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/theme/material-palenight.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <style>
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
         .CodeMirror {
             font-family: 'MonoLisa', monospace;
             font-size: .8rem;
             padding: 1rem 0;
+        }
+
+        .class-marker {
+            color: #c4e792;
         }
     </style>
 </head>
@@ -27,13 +25,19 @@
     <div id="output" class="col-span-full border border-green-500"></div>
 
     <!-- Editor 1 -->
-    <textarea id="editor1" class="w-full h-96 border">
-<h1 class="text-2xl font-bold text-center">Hello World</h1>
-<p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
-</textarea>
+    <div id="input">
+        <button class="toggle-classes">Toggle Classes</button>
+        <textarea id="editor1" class="w-full h-96 border">
+    <h1 class="text-2xl font-bold text-center">Hello World</h1>
+    <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+    </textarea>
+    </div>
 
-    <!-- Editor 2 -->
-    <textarea id="editor2" class="w-full h-96 border"></textarea>
+    <div id="processed">
+        <!-- Editor 2 -->
+        <textarea id="editor2" class="w-full h-96 border"></textarea>
+
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.js"></script>
@@ -45,6 +49,7 @@
     <script src="process.js"></script>
 
     <script>
+
         // Initialize CodeMirror instances
         var editor1 = CodeMirror.fromTextArea(document.getElementById("editor1"), {
             lineNumbers: true,
@@ -61,7 +66,6 @@
             lineWrapping: true
         });
 
-
         // Process HTML and update editor2 and output div
         editor1.on("change", function () {
             var processedHTML = processHTML(editor1.getValue());
@@ -76,7 +80,45 @@
             $("#output").html(processedHTML);
             $("body").removeClass("opacity-0");
 
+            var codeMirrorElement = $('#input .CodeMirror');
+            var codeMirrorInstance = codeMirrorElement[0].CodeMirror;
+
+            // Toggle hide-strings class on CodeMirror instances
+            $(".toggle-classes").click(function () {
+                var text = codeMirrorInstance.getValue();
+                var regex = /class="[^"]*"/g;
+                var match;
+
+                codeMirrorElement.toggleClass('hide-strings');
+
+                if (codeMirrorElement.hasClass('hide-strings')) {
+                    while ((match = regex.exec(text)) !== null) {
+                        var from = codeMirrorInstance.posFromIndex(match.index);
+                        var to = codeMirrorInstance.posFromIndex(match.index + match[0].length);
+                        var marker = document.createElement('span');
+                        marker.className = 'class-marker';
+                        marker.textContent = '⋅';
+                        var mark = codeMirrorInstance.markText(from, to, { className: 'hidden', replacedWith: marker });
+
+                        // Add click event listener to the marker
+                        (function (mark) {
+                            marker.addEventListener('click', function () {
+                                mark.clear();
+                            });
+                        })(mark);
+                    }
+                } else {
+                    codeMirrorInstance.getAllMarks().forEach(function (mark) {
+                        if (mark.className === 'hidden') {
+                            mark.clear();
+                        }
+                    });
+                }
+
+                codeMirrorInstance.refresh();
+            });
         });
+
     </script>
 </body>
 
