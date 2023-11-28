@@ -88,7 +88,7 @@
             var codeMirrorInstance = codeMirrorElement[0].CodeMirror;
 
             // Toggle hide-strings class on CodeMirror instances
-            $(".toggle-classes").click(function () {
+            function toggleClassMarker(codeMirrorInstance, codeMirrorElement) {
                 var text = codeMirrorInstance.getValue();
                 var regex = /class="[^"]*"/g;
                 var match;
@@ -120,6 +120,10 @@
                 }
 
                 codeMirrorInstance.refresh();
+            }
+
+            $(".toggle-classes").click(function () {
+                toggleClassMarker(codeMirrorInstance, codeMirrorElement);
             });
         });
 
