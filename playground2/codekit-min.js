@@ -80,6 +80,7 @@
                 'insert-after': this.processInsertAfterStatement.bind(this),
                 'insert-before': this.processInsertBeforeStatement.bind(this),
                 'match-height': this.processMatchHeightStatement.bind(this),
+                'prepend-to': this.processPrependToStatement.bind(this),
                 'on-click': this.processOnClickStatement.bind(this),
                 'show': this.processShowStatement.bind(this),
                 'store': this.processStoreStatement.bind(this),
@@ -122,19 +123,6 @@
             var className = statement.text;
             targets.addClass(className);
         },
-        // processAppendToStatement: function (statement, targets) {
-        //     var appendToTargets;
-        //     if (statement.children.length > 0) {
-        //         appendToTargets = statement.children.find(child => child.tag === 'select-all').targets;
-        //     } else {
-        //         appendToTargets = $(statement.text);
-        //     }
-        //     targets.forEach(target => {
-        //         appendToTargets.forEach(appendToTarget => {
-        //             $(target).appendTo(appendToTarget);
-        //         });
-        //     });
-        // },
         processAppendToStatement: function (statement, targets) {
             var appendToTargets;
             if (statement.children && statement.children.length > 0) {
@@ -159,9 +147,7 @@
             targets.css(cssProperties);
         },
         processHideStatement: function (statement, targets) {
-            targets.forEach(target => {
-                $(target).hide();
-            });
+            targets.hide();
         },
         processIfStatement: function (statement, targets, whenIndex) {
             // Get the value to compare it to
@@ -217,19 +203,24 @@
             targets.matchHeight();
         },
         processOnClickStatement: function (statement, targets, whenIndex) {
-            targets.forEach(target => {
-                $(target).addClass(`when-${whenIndex}`).on('click.hijinx', () => {
-                    console.log('Element clicked');
-                    console.log(statement.children);
+            targets.addClass(`when-${whenIndex}`).on('click.hijinx', () => {
+                console.log('Element clicked');
+                console.log(statement.children);
 
-                    this.processStatements(statement.children, whenIndex);
-                });
+                this.processStatements(statement.children, whenIndex);
             });
         },
+        processPrependToStatement: function (statement, targets) {
+            var prependToTargets;
+            if (statement.children && statement.children.length > 0) {
+                prependToTargets = $(statement.children.find(child => child.tag === 'select-all').targets);
+            } else {
+                prependToTargets = $(statement.text);
+            }
+            targets.prependTo(prependToTargets);
+        },
         processShowStatement: function (statement, targets) {
-            targets.forEach(target => {
-                $(target).show();
-            });
+            targets.show();
         },
         processStoreStatement: function (statement, targets) {
             statement.children.forEach(child => {

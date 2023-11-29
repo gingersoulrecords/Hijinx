@@ -149,6 +149,22 @@
 
         <when event="load">
 
+            <select-all targets="h1">
+                <on-click>
+                    <select-all>
+                        <targets>h3</targets>
+                        <insert-after>
+                            <select-all>
+                                <targets each="body">
+                                    <find>h2</find>
+                                </targets>
+                            </select-all>
+                        </insert-after>
+                    </select-all>
+
+                </on-click>
+            </select-all>
+
             <!--
             <select-all>
                 <targets>h2</targets>
@@ -200,32 +216,33 @@
                 </append-to>
             </select-all> -->
 
-            <select-all>
+            <!-- <select-all>
                  <targets each="p">
                     <siblings>h3</siblings>
                 </targets>
+                <hide></hide>
                 <insert-before>
                   <select-all>
                       <targets>h1</targets>
                   </select-all>
                 </insert-before>
-            </select-all>
+            </select-all> -->
 
-            <select-all>
+            <!-- <select-all>
                 <targets each="p">
                    <siblings>h3</siblings>
                </targets>
                <insert-before>h2
                </insert-before>
-           </select-all>
+           </select-all> -->
 
-            <select-all targets="h4">
+            <!-- <select-all targets="h4">
                 <insert-after>
                     <select-all>
                         <targets>h2</targets>
                     </select-all>
                 </insert-after>
-            </select-all>
+            </select-all> -->
 
 
 
