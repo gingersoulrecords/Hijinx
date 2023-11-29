@@ -122,44 +122,36 @@
             var className = statement.text;
             targets.addClass(className);
         },
+        // processAppendToStatement: function (statement, targets) {
+        //     var appendToTargets;
+        //     if (statement.children.length > 0) {
+        //         appendToTargets = statement.children.find(child => child.tag === 'select-all').targets;
+        //     } else {
+        //         appendToTargets = $(statement.text);
+        //     }
+        //     targets.forEach(target => {
+        //         appendToTargets.forEach(appendToTarget => {
+        //             $(target).appendTo(appendToTarget);
+        //         });
+        //     });
+        // },
         processAppendToStatement: function (statement, targets) {
             var appendToTargets;
-            if (statement.children.length > 0) {
-                appendToTargets = statement.children.find(child => child.tag === 'select-all').targets;
+            if (statement.children && statement.children.length > 0) {
+                appendToTargets = $(statement.children.find(child => child.tag === 'select-all').targets);
             } else {
                 appendToTargets = $(statement.text);
             }
-            targets.forEach(target => {
-                appendToTargets.forEach(appendToTarget => {
-                    $(target).appendTo(appendToTarget);
-                });
-            });
+            targets.appendTo(appendToTargets);
         },
         processAttrStatement: function (statement, targets) {
             var attrProperties = {};
             statement.children.forEach(child => {
                 attrProperties[child.tag] = child.text;
             });
-            targets.forEach(target => {
-                for (var attr in attrProperties) {
-                    $(target).attr(attr, attrProperties[attr]);
-                }
-            });
+            targets.attr(attrProperties);
         },
-        // processCssStatement: function (statement, targets) {
-        //     console.log('targets ', targets);
-
-        //     var cssProperties = {};
-        //     statement.children.forEach(child => {
-        //         cssProperties[child.tag] = child.text;
-        //     });
-        //     targets.forEach(target => {
-        //         $(target).css(cssProperties);
-        //     });
-        // },
         processCssStatement: function (statement, targets) {
-            console.log('targets ', targets);
-
             var cssProperties = {};
             statement.children.forEach(child => {
                 cssProperties[child.tag] = child.text;
@@ -213,41 +205,10 @@
             });
         },
 
-        // processInsertAfterStatement: function (statement, targets) {
-        //     var insertAfterTargets;
-        //     if (statement.children && statement.children.length > 0) {
-        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
-        //         insertAfterTargets = selectAllChild.targets || $(selectAllChild.attributes.find(attr => attr.name === 'targets').value).toArray();
-        //     } else {
-        //         insertAfterTargets = $(statement.text).toArray();
-        //     }
-        //     targets.forEach(target => {
-        //         insertAfterTargets.forEach(insertAfterTarget => {
-        //             $(target).clone().insertAfter(insertAfterTarget);
-        //         });
-        //     });
-        // },
-        // processInsertBeforeStatement: function (statement, targets) {
-        //     var insertBeforeTargets;
-        //     if (statement.children && statement.children.length > 0) {
-        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
-        //         insertBeforeTargets = selectAllChild.targets || $(selectAllChild.attributes.find(attr => attr.name === 'targets').value).toArray();
-        //     } else {
-        //         insertBeforeTargets = $(statement.text).toArray();
-        //     }
-        //     targets.forEach(target => {
-        //         insertBeforeTargets.forEach(insertBeforeTarget => {
-        //             $(target).clone().insertBefore(insertBeforeTarget);
-        //         });
-        //     });
-        // },
-
 
 
         processMatchHeightStatement: function (statement, targets, whenIndex) {
-            if (statement.targetsSelector) {
-                $(statement.targetsSelector).matchHeight();
-            }
+            targets.matchHeight();
         },
         processOnClickStatement: function (statement, targets, whenIndex) {
             targets.forEach(target => {
@@ -315,11 +276,57 @@
         //     }
         //     return targets;
         // },
+
+
+        // processTargets: function (statement, statementElement) {
+        //     var targets = $();
+        //     var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
+        //     if (targetsAttr) {
+        //         $(targetsAttr.value).each((_, element) => {
+        //             targets = targets.add($(element));
+        //         });
+        //         statement.targetsSelector = targetsAttr.value;
+        //         statement.children.forEach(child => {
+        //             child.targetsSelector = targetsAttr.value;
+        //         });
+        //     }
+        //     var targetsChild = statement.children.find(child => child.tag === 'targets');
+        //     if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
+        //         targets = targets.add($(statementElement.children('targets').text()));
+        //     }
+        //     if (targetsChild && targetsChild.attributes) {
+        //         var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
+        //         if (eachAttr) {
+        //             $(eachAttr.value).each((_, element) => {
+        //                 var target = $(element);
+        //                 targetsChild.children.forEach(child => {
+        //                     target = target[child.tag](child.text);
+        //                 });
+        //                 targets = targets.add(target);
+        //             });
+        //         }
+        //     }
+        //     if (statement.tag === 'set') {
+        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
+        //         if (selectAllChild) {
+        //             targets = this.processTargets(selectAllChild, $(selectAllChild.children));
+        //         }
+        //         var setName = statement.attributes.find(attr => attr.name === 'name').value;
+        //         this.sets[setName] = targets;
+        //     }
+        //     return targets;
+        // },
+
         processTargets: function (statement, statementElement) {
             var targets = $();
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
-                $(targetsAttr.value).each((_, element) => {
+                var elements = $(targetsAttr.value);
+                if (elements.length === 0) {
+                    console.error(`No elements found for selector "${targetsAttr.value}"`);
+                    return targets;
+                }
+                elements.each((_, element) => {
                     targets = targets.add($(element));
                 });
                 statement.targetsSelector = targetsAttr.value;
