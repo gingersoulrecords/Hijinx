@@ -120,9 +120,7 @@
         },
         processAddClassStatement: function (statement, targets) {
             var className = statement.text;
-            targets.forEach(target => {
-                $(target).addClass(className);
-            });
+            targets.addClass(className);
         },
         processAppendToStatement: function (statement, targets) {
             var appendToTargets;
@@ -148,14 +146,25 @@
                 }
             });
         },
+        // processCssStatement: function (statement, targets) {
+        //     console.log('targets ', targets);
+
+        //     var cssProperties = {};
+        //     statement.children.forEach(child => {
+        //         cssProperties[child.tag] = child.text;
+        //     });
+        //     targets.forEach(target => {
+        //         $(target).css(cssProperties);
+        //     });
+        // },
         processCssStatement: function (statement, targets) {
+            console.log('targets ', targets);
+
             var cssProperties = {};
             statement.children.forEach(child => {
                 cssProperties[child.tag] = child.text;
             });
-            targets.forEach(target => {
-                $(target).css(cssProperties);
-            });
+            targets.css(cssProperties);
         },
         processHideStatement: function (statement, targets) {
             targets.forEach(target => {
@@ -263,25 +272,65 @@
             });
         },
 
+        // processTargets: function (statement, statementElement) {
+        //     var targets = [];
+        //     // Case 1: 'targets' attribute on a <select-all> tag
+        //     var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
+        //     if (targetsAttr) {
+        //         $(targetsAttr.value).each((_, element) => {
+        //             targets.push($(element));
+        //         });
+        //         statement.targetsSelector = targetsAttr.value;
+        //         statement.children.forEach(child => {
+        //             child.targetsSelector = targetsAttr.value;
+        //         });
+        //     }
+        //     // Case 2: innertext value of a <targets> child of a <select-all> tag
+        //     var targetsChild = statement.children.find(child => child.tag === 'targets');
+        //     if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
+        //         targets.push($(statementElement.children('targets').text()));
+        //     }
+        //     // Case 3: jQuery product of a <targets> child's 'foreach' attribute
+        //     if (targetsChild && targetsChild.attributes) {
+        //         var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
+        //         if (eachAttr) {
+        //             $(eachAttr.value).each((_, element) => {
+        //                 var target = $(element);
+        //                 targetsChild.children.forEach(child => {
+        //                     target = target[child.tag](child.text);
+        //                 });
+        //                 targets.push(target);
+        //             });
+        //         }
+        //     }
+
+        //     // If the statement is a 'set' tag, store the targets in hijinx.sets
+        //     if (statement.tag === 'set') {
+        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
+        //         if (selectAllChild) {
+        //             targets = this.processTargets(selectAllChild, $(selectAllChild.children));
+        //         }
+        //         var setName = statement.attributes.find(attr => attr.name === 'name').value;
+        //         this.sets[setName] = targets;
+        //     }
+        //     return targets;
+        // },
         processTargets: function (statement, statementElement) {
-            var targets = [];
-            // Case 1: 'targets' attribute on a <select-all> tag
+            var targets = $();
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
                 $(targetsAttr.value).each((_, element) => {
-                    targets.push($(element));
+                    targets = targets.add($(element));
                 });
                 statement.targetsSelector = targetsAttr.value;
                 statement.children.forEach(child => {
                     child.targetsSelector = targetsAttr.value;
                 });
             }
-            // Case 2: innertext value of a <targets> child of a <select-all> tag
             var targetsChild = statement.children.find(child => child.tag === 'targets');
             if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
-                targets.push($(statementElement.children('targets').text()));
+                targets = targets.add($(statementElement.children('targets').text()));
             }
-            // Case 3: jQuery product of a <targets> child's 'foreach' attribute
             if (targetsChild && targetsChild.attributes) {
                 var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
                 if (eachAttr) {
@@ -290,12 +339,10 @@
                         targetsChild.children.forEach(child => {
                             target = target[child.tag](child.text);
                         });
-                        targets.push(target);
+                        targets = targets.add(target);
                     });
                 }
             }
-
-            // If the statement is a 'set' tag, store the targets in hijinx.sets
             if (statement.tag === 'set') {
                 var selectAllChild = statement.children.find(child => child.tag === 'select-all');
                 if (selectAllChild) {

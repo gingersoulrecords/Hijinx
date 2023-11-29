@@ -5,6 +5,12 @@ const SIZE_MODIFIERS = {
     "xl:": "1366px"
 };
 
+const PROPERTY_MAPPING = {
+    "bg": "background",
+    "color": "color",
+    // Add more mappings here as needed
+};
+
 function escapeClassName(className) {
     return className
         .replace(/!/g, "\\!")
@@ -30,12 +36,11 @@ function processHTML(htmlString) {
         classList.forEach((className) => {
             const match = className.match(CLASS_NAME_REGEX);
             if (match) {
-                const prefix = match[1] || "";
+                let prefix = match[1] || "";
                 let value = match[2].replace(/_/g, " ");
                 let escapedClassName = escapeClassName(className);
                 let ruleAdded = false;
                 let important = false;
-                let modifiedPrefix = prefix;
 
                 if (value.startsWith("--")) {
                     value = `var(${value})`;
@@ -43,19 +48,24 @@ function processHTML(htmlString) {
 
                 if (prefix.startsWith("!")) {
                     important = true;
-                    modifiedPrefix = prefix.slice(1);
-                    escapedClassName = escapeClassName(className);
+                    prefix = prefix.slice(1);
                 }
 
-                if (modifiedPrefix.startsWith("hover:")) {
-                    styleTagContent += addCSSRule(`.${escapedClassName}:hover`, modifiedPrefix.slice(6), value, important);
+                let property = PROPERTY_MAPPING[prefix];
+                if (!property) {
+                    // If there's no mapping for the prefix, use the prefix as the property
+                    property = prefix;
+                }
+
+                if (prefix.startsWith("hover:")) {
+                    styleTagContent += addCSSRule(`.${escapedClassName}:hover`, property, value, important);
                     ruleAdded = true;
                 }
 
                 for (const [modifier, minWidth] of Object.entries(SIZE_MODIFIERS)) {
-                    if (!ruleAdded && modifiedPrefix.startsWith(modifier)) {
+                    if (!ruleAdded && prefix.startsWith(modifier)) {
                         styleTagContent += `@media (min-width: ${minWidth}) {
-                            ${addCSSRule(`.${escapedClassName}`, modifiedPrefix.slice(modifier.length), value, important)}
+                            ${addCSSRule(`.${escapedClassName}`, property, value, important)}
                         }\n`;
                         ruleAdded = true;
                         break;
@@ -63,7 +73,7 @@ function processHTML(htmlString) {
                 }
 
                 if (!ruleAdded) {
-                    styleTagContent += addCSSRule(`.${escapedClassName}`, modifiedPrefix, value, important);
+                    styleTagContent += addCSSRule(`.${escapedClassName}`, property, value, important);
                 }
             }
         });
