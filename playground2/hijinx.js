@@ -78,7 +78,7 @@
                 'css': this.processCssStatement.bind(this),
                 'hide': this.processHideStatement.bind(this),
                 'insert-after': this.processInsertAfterStatement.bind(this),
-                //'insert-before': this.processInsertBeforeStatement.bind(this),
+                'insert-before': this.processInsertBeforeStatement.bind(this),
                 'match-height': this.processMatchHeightStatement.bind(this),
                 'on-click': this.processOnClickStatement.bind(this),
                 'show': this.processShowStatement.bind(this),
@@ -189,20 +189,26 @@
             }
         },
         processInsertAfterStatement: function (statement, targets) {
-            console.log('targets', targets);
-            console.log('statement', statement);
-            console.log('statement.children', statement.children);
             var insertAfterTargets;
             if (statement.children && statement.children.length > 0) {
-                insertAfterTargets = statement.children.find(child => child.tag === 'select-all').targets;
+                insertAfterTargets = $(statement.children.find(child => child.tag === 'select-all').targets);
             } else {
                 insertAfterTargets = $(statement.text);
             }
-            targets.forEach(target => {
-                insertAfterTargets.forEach(insertAfterTarget => {
-                    $(target).insertAfter(insertAfterTarget);
-                });
-            });
+            targets.insertAfter(insertAfterTargets);
+        },
+
+        processInsertBeforeStatement: function (statement, targets) {
+            console.log('targets', targets);
+            console.log('statement', statement);
+            console.log('statement.children', statement.children);
+            var insertBeforeTargets;
+            if (statement.children && statement.children.length > 0) {
+                insertBeforeTargets = $(statement.children.find(child => child.tag === 'select-all').targets);
+            } else {
+                insertBeforeTargets = $(statement.text);
+            }
+            targets.insertBefore(insertBeforeTargets);
         },
 
 

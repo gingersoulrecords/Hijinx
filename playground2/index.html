@@ -80,6 +80,10 @@
                 Hello World, I’m an H3
             </h3>
 
+            <h3 class="text-xl">
+                Hello World, I’m an H3
+            </h3>
+
             <h4>
                 Hello World, I’m an H4
             </h4>
@@ -144,6 +148,8 @@
 
 
         <when event="load">
+
+            <!--
             <select-all>
                 <targets>h2</targets>
                 <css>
@@ -192,11 +198,11 @@
                 <append-to>
                     <select-all targets=".card"></select-all>
                 </append-to>
-            </select-all>
+            </select-all> -->
 
-            <!-- <select-all>
+            <select-all>
                  <targets each="p">
-                    <next>h3</prev>
+                    <siblings>h3</siblings>
                 </targets>
                 <insert-before>
                   <select-all>
@@ -205,13 +211,21 @@
                 </insert-before>
             </select-all>
 
+            <select-all>
+                <targets each="p">
+                   <siblings>h3</siblings>
+               </targets>
+               <insert-before>h2
+               </insert-before>
+           </select-all>
+
             <select-all targets="h4">
                 <insert-after>
                     <select-all>
                         <targets>h2</targets>
                     </select-all>
                 </insert-after>
-            </select-all> -->
+            </select-all>
 
 
 
