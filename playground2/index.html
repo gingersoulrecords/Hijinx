@@ -40,7 +40,7 @@
                 <button class="close-button">Close</button>
             </div>
             <!-- <when event="load">
-                <if store="notificationbar" value="closed">
+                <if store="notificationbarf" value="closed">
                     <select-all targets=".notification-bar">
                         <hide></hide>
                     </select-all>
@@ -51,7 +51,7 @@
                             <hide></hide>
                         </select-all>
                         <store>
-                            <notificationbar>closed</notificationbar>
+                            <notificationbarf>closed</notificationbarf>
                         </store>
                     </on-click>
                 </select-all>
@@ -149,7 +149,16 @@
 
         <when event="load">
 
-            <select-all targets="h1">
+            <set name="elLinks">
+                <select-all>
+                  <targets each=".card">
+                    <find>a</find>
+                    <attr>href</attr>
+                  </targets>
+                </select-all>
+              </set>
+
+            <!-- <select-all targets="h1">
                 <on-click>
                     <select-all>
                         <targets>h3</targets>
@@ -163,7 +172,7 @@
                     </select-all>
 
                 </on-click>
-            </select-all>
+            </select-all> -->
 
             <!--
             <select-all>

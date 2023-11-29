@@ -248,7 +248,7 @@
         //     if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
         //         targets.push($(statementElement.children('targets').text()));
         //     }
-        //     // Case 3: jQuery product of a <targets> child's 'foreach' attribute
+        //     // Case 3: jQuery product of a <targets> child's 'each' attribute
         //     if (targetsChild && targetsChild.attributes) {
         //         var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
         //         if (eachAttr) {
@@ -275,11 +275,17 @@
         // },
 
 
+
         // processTargets: function (statement, statementElement) {
         //     var targets = $();
         //     var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
         //     if (targetsAttr) {
-        //         $(targetsAttr.value).each((_, element) => {
+        //         var elements = $(targetsAttr.value);
+        //         if (elements.length === 0) {
+        //             console.error(`No elements found for selector "${targetsAttr.value}"`);
+        //             return targets;
+        //         }
+        //         elements.each((_, element) => {
         //             targets = targets.add($(element));
         //         });
         //         statement.targetsSelector = targetsAttr.value;
@@ -302,6 +308,7 @@
         //                 targets = targets.add(target);
         //             });
         //         }
+
         //     }
         //     if (statement.tag === 'set') {
         //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
@@ -316,6 +323,7 @@
 
         processTargets: function (statement, statementElement) {
             var targets = $();
+            // Case 1: 'targets' attribute on a <select-all> tag
             var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
             if (targetsAttr) {
                 var elements = $(targetsAttr.value);
@@ -331,10 +339,12 @@
                     child.targetsSelector = targetsAttr.value;
                 });
             }
+            // Case 2: innertext value of a <targets> child of a <select-all> tag
             var targetsChild = statement.children.find(child => child.tag === 'targets');
             if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
                 targets = targets.add($(statementElement.children('targets').text()));
             }
+            // Case 3: jQuery product of a <targets> child's 'each' attribute
             if (targetsChild && targetsChild.attributes) {
                 var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
                 if (eachAttr) {
@@ -343,7 +353,11 @@
                         targetsChild.children.forEach(child => {
                             target = target[child.tag](child.text);
                         });
-                        targets = targets.add(target);
+                        if (typeof target === 'string') {
+                            targets.push(target);
+                        } else {
+                            targets = targets.add(target);
+                        }
                     });
                 }
             }
