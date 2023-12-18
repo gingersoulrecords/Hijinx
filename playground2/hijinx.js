@@ -230,51 +230,6 @@
             });
         },
 
-        // processTargets: function (statement, statementElement) {
-        //     var targets = [];
-        //     // Case 1: 'targets' attribute on a <select-all> tag
-        //     var targetsAttr = statement.attributes.find(attr => attr.name === 'targets');
-        //     if (targetsAttr) {
-        //         $(targetsAttr.value).each((_, element) => {
-        //             targets.push($(element));
-        //         });
-        //         statement.targetsSelector = targetsAttr.value;
-        //         statement.children.forEach(child => {
-        //             child.targetsSelector = targetsAttr.value;
-        //         });
-        //     }
-        //     // Case 2: innertext value of a <targets> child of a <select-all> tag
-        //     var targetsChild = statement.children.find(child => child.tag === 'targets');
-        //     if (targetsChild && (!targetsChild.children || !targetsChild.children.length)) {
-        //         targets.push($(statementElement.children('targets').text()));
-        //     }
-        //     // Case 3: jQuery product of a <targets> child's 'each' attribute
-        //     if (targetsChild && targetsChild.attributes) {
-        //         var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
-        //         if (eachAttr) {
-        //             $(eachAttr.value).each((_, element) => {
-        //                 var target = $(element);
-        //                 targetsChild.children.forEach(child => {
-        //                     target = target[child.tag](child.text);
-        //                 });
-        //                 targets.push(target);
-        //             });
-        //         }
-        //     }
-
-        //     // If the statement is a 'set' tag, store the targets in hijinx.sets
-        //     if (statement.tag === 'set') {
-        //         var selectAllChild = statement.children.find(child => child.tag === 'select-all');
-        //         if (selectAllChild) {
-        //             targets = this.processTargets(selectAllChild, $(selectAllChild.children));
-        //         }
-        //         var setName = statement.attributes.find(attr => attr.name === 'name').value;
-        //         this.sets[setName] = targets;
-        //     }
-        //     return targets;
-        // },
-
-
 
         // processTargets: function (statement, statementElement) {
         //     var targets = $();
@@ -348,17 +303,19 @@
             if (targetsChild && targetsChild.attributes) {
                 var eachAttr = targetsChild.attributes.find(attr => attr.name === 'each');
                 if (eachAttr) {
-                    $(eachAttr.value).each((_, element) => {
-                        var target = $(element);
-                        targetsChild.children.forEach(child => {
-                            target = target[child.tag](child.text);
-                        });
-                        if (typeof target === 'string') {
-                            targets.push(target);
+                    var elements = $(eachAttr.value);
+                    targetsChild.children.forEach(child => {
+                        if (child.tag === 'next' || child.tag === 'prev' || child.tag === 'first' || child.tag === 'last') {
+                            elements = elements[child.tag](child.text);
                         } else {
-                            targets = targets.add(target);
+                            elements = elements.map((_, element) => $(element)[child.tag](child.text));
                         }
                     });
+                    if (typeof elements === 'string') {
+                        targets.push(elements);
+                    } else {
+                        targets = targets.add(elements);
+                    }
                 }
             }
             if (statement.tag === 'set') {
@@ -392,7 +349,7 @@
                 //console.log('indexWhens and processWhens have finished processing');
                 //console.timeEnd("Processing time");
             });
-        }
+        },
     };
 
     window.hijinx = hijinx;

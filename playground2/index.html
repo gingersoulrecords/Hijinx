@@ -39,8 +39,9 @@
                 <p>This is the message</p>
                 <button class="close-button">Close</button>
             </div>
-            <!-- <when event="load">
-                <if store="notificationbarf" value="closed">
+
+            <when event="load">
+                <if store="notificationbar" value="closed">
                     <select-all targets=".notification-bar">
                         <hide></hide>
                     </select-all>
@@ -51,11 +52,17 @@
                             <hide></hide>
                         </select-all>
                         <store>
-                            <notificationbarf>closed</notificationbarf>
+                            <notificationbar>closed</notificationbar>
                         </store>
                     </on-click>
                 </select-all>
-            </when> -->
+            </when>
+
+            <div class="search border p-3">
+                <p>I want this to go inside the first .card on mobile, but go after the first h1 on larger screens.</p>
+                <input class="border" type="search" />
+            </div>
+
 
             <h1 class="text-5xl font-bold">
                 Hello World, I’m an H1
@@ -137,26 +144,45 @@
         <div>
             <textarea class="border" name="input-textarea" id="input-textarea" cols="30" rows="10">
 
-          <when event="done">
+        <when event="done">
             <select-all targets="body">
-              <css>
-                <opacity>1</opacity>
-              </css>
+                <css>
+                    <opacity>1</opacity>
+                </css>
             </select-all>
-          </when>
+        </when>
 
+        <when event="load" media="(max-width:767px)">
+            <select-all targets=".search">
+                <append-to>
+                    <select-all>
+                        <targets each=".card">
+                            <first></first>
+                        </targets>
+                    </select-all>
+                </append-to>
+            </select-all>
+        </when>
 
+        <when event="load" media="(min-width:768px)">
+            <select-all targets=".search">
+                <insert-after>
+                    <select-all targets="h1"></select-all>
+                </insert-after>
+            </select-all>
+        </when>
 
         <when event="load">
 
+
             <set name="elLinks">
                 <select-all>
-                  <targets each=".card">
-                    <find>a</find>
-                    <attr>href</attr>
-                  </targets>
+                    <targets each=".card">
+                        <find>a</find>
+                        <attr>href</attr>
+                    </targets>
                 </select-all>
-              </set>
+            </set>
 
             <!-- <select-all targets="h1">
                 <on-click>
@@ -174,215 +200,217 @@
                 </on-click>
             </select-all> -->
 
-            <!--
-            <select-all>
-                <targets>h2</targets>
-                <css>
-                  <color>blue</color>
-                  <font-family>Georgia</font-family>
-                </css>
-                <attr>
-                  <name>data-poo</name>
-                  <value>bar</value>
-                </attr>
-              </select-all>
 
-
-
-            <select-all targets="h1">
-                <css>
-                    <color>red</color>
-                </css>
-            </select-all>
-
-            <select-all>
-                <targets>h2</targets>
-                <css>
-                    <color>blue</color>
-                </css>
-            </select-all>
-
-            <select-all>
-                <targets each="p">
-                    <next>h3</next>
-                </targets>
-                <css>
-                    <color>green</color>
-                </css>
-            </select-all>
-
-            <select-all targets="p">
-                <add-class>underline uppercase</add-class>
-            </select-all>
-
-            <select-all targets=".matchme">
-                <match-height></match-height>
-            </select-all>
-
-            <select-all targets="h1">
-                <append-to>
-                    <select-all targets=".card"></select-all>
-                </append-to>
-            </select-all> -->
-
-            <!-- <select-all>
-                 <targets each="p">
-                    <siblings>h3</siblings>
-                </targets>
-                <hide></hide>
-                <insert-before>
-                  <select-all>
-                      <targets>h1</targets>
-                  </select-all>
-                </insert-before>
-            </select-all> -->
-
-            <!-- <select-all>
-                <targets each="p">
-                   <siblings>h3</siblings>
-               </targets>
-               <insert-before>h2
-               </insert-before>
-           </select-all> -->
-
-            <!-- <select-all targets="h4">
-                <insert-after>
                     <select-all>
                         <targets>h2</targets>
+                        <css>
+                          <color>blue</color>
+                          <font-family>Georgia</font-family>
+                        </css>
+                        <attr>
+                          <name>data-poo</name>
+                          <value>bar</value>
+                        </attr>
+                      </select-all>
+
+
+
+                    <select-all targets="h1">
+                        <css>
+                            <color>red</color>
+                        </css>
                     </select-all>
-                </insert-after>
-            </select-all> -->
+
+                    <!-- <select-all>
+                        <targets>h2</targets>
+                        <css>
+                            <color>blue</color>
+                        </css>
+                    </select-all> -->
 
 
 
-                  <!-- <select-all targets="h3">
-                    <insert-after>
-                        <select-all>
-                            <targets>h1</targets>
-                        </select-all>
-                    </insert-after>
-                  </select-all> -->
+                    <select-all targets="p">
+                        <add-class>underline uppercase</add-class>
+                    </select-all>
+
+                    <select-all targets=".matchme">
+                        <match-height></match-height>
+                    </select-all>
+
+                    <!-- <select-all targets="h1">
+                        <append-to>
+                            <select-all targets=".card"></select-all>
+                        </append-to>
+                    </select-all> -->
+
+            <!-- <select-all>
+                         <targets each="p">
+                            <siblings>h3</siblings>
+                        </targets>
+                        <hide></hide>
+                        <insert-before>
+                          <select-all>
+                              <targets>h1</targets>
+                          </select-all>
+                        </insert-before>
+                    </select-all> -->
+
+            <!-- <select-all>
+                        <targets each="p">
+                           <siblings>h3</siblings>
+                       </targets>
+                       <insert-before>h2
+                       </insert-before>
+                   </select-all> -->
+
+            <!-- <select-all targets="h4">
+                        <insert-after>
+                            <select-all>
+                                <targets>h2</targets>
+                            </select-all>
+                        </insert-after>
+                    </select-all> -->
+
+
+
+            <!-- <select-all targets="h3">
+                            <insert-after>
+                                <select-all>
+                                    <targets>h1</targets>
+                                </select-all>
+                            </insert-after>
+                          </select-all> -->
 
 
             <!-- <select-all targets="h1">
-                <on-click>
-                  <select-all>
-                      <targets>h3</targets>
-                      <insert-after>
+                        <on-click>
                           <select-all>
-                              <targets each="body">
-                                    <find>h2</find>
-                              </targets>
+                              <targets>h3</targets>
+                              <insert-after>
+                                  <select-all>
+                                      <targets each="body">
+                                            <find>h2</find>
+                                      </targets>
+                                  </select-all>
+                              </insert-after>
                           </select-all>
-                      </insert-after>
-                  </select-all>
-                </on-click>
-              </select-all>
+                        </on-click>
+                      </select-all>
 
-                  <select-all targets="h1">
-                <on-click>
-                  <select-all>
-                      <targets>h3</targets>
-                      <insert-after>
+                          <select-all targets="h1">
+                        <on-click>
                           <select-all>
-                              <targets each="body">
-                                    <find>h2</find>
-                              </targets>
+                              <targets>h3</targets>
+                              <insert-after>
+                                  <select-all>
+                                      <targets each="body">
+                                            <find>h2</find>
+                                      </targets>
+                                  </select-all>
+                              </insert-after>
                           </select-all>
-                      </insert-after>
-                  </select-all>
-                </on-click>
-              </select-all> -->
+                        </on-click>
+                      </select-all> -->
+
+                      <select-all>
+                        <targets each="p">
+                            <next>h3</next>
+                        </targets>
+                        <css>
+                            <color>green</color>
+                        </css>
+                    </select-all>
 
         </when>
 
 
-          <!-- <when event="load" media="(min-width:768px)">
-            <select-all targets="h1">
-              <css>
-                <color>red</color>
-              </css>
-            </select-all>
-          </when>
+        <!-- <when event="load" media="(min-width:768px)">
+                    <select-all targets="h1">
+                      <css>
+                        <color>red</color>
+                      </css>
+                    </select-all>
+                  </when>
 
-          <when event="load" media="(max-width:767px)">
-            <select-all targets="h1">
-              <css>
-                <color>blue</color>
-              </css>
-            </select-all>
+                  <when event="load" media="(max-width:767px)">
+                    <select-all targets="h1">
+                      <css>
+                        <color>blue</color>
+                      </css>
+                    </select-all>
 
-            <select-all>
-              <targets>h1</targets>
-              <on-click>
-                <select-all>
-                    <targets>h3</targets>
-                    <insert-after>
+                    <select-all>
+                      <targets>h1</targets>
+                      <on-click>
                         <select-all>
-                            <targets>p</targets>
+                            <targets>h3</targets>
+                            <insert-after>
+                                <select-all>
+                                    <targets>p</targets>
+                                </select-all>
+                            </insert-after>
                         </select-all>
-                    </insert-after>
-                </select-all>
-              </on-click>
-            </select-all>
-          </when> -->
+                      </on-click>
+                    </select-all>
+                  </when> -->
 
-
-          <!-- <when event="load">
-
-
-
-
-            <select-all>
-              <targets each="p">
-                <prev>h3</prev>
-              </targets>
-              <css>
-                <color>orange</color>
-                <font-style>italic</font-style>
-              </css>
-            </select-all>
-
-            <set name="elLinks">
-              <select-all>
-                <targets each=".card">
-                  <find>a</find>
-                  <attr>href</attr>
-                </targets>
-              </select-all>
-            </set>
-
-
-        </when> -->
 
         <!-- <when event="load">
-                <select-all targets="h1">
-                    <on-click>
-                        <select-all targets="h3">
-                            <hide></hide>
+
+
+
+
+                    <select-all>
+                      <targets each="p">
+                        <prev>h3</prev>
+                      </targets>
+                      <css>
+                        <color>orange</color>
+                        <font-style>italic</font-style>
+                      </css>
+                    </select-all>
+
+                    <set name="elLinks">
+                      <select-all>
+                        <targets each=".card">
+                          <find>a</find>
+                          <attr>href</attr>
+                        </targets>
+                      </select-all>
+                    </set>
+
+
+                </when> -->
+
+        <!-- <when event="load">
+                        <select-all targets="h1">
+                            <on-click>
+                                <select-all targets="h3">
+                                    <hide></hide>
+                                </select-all>
+                            </on-click>
                         </select-all>
-                    </on-click>
-                </select-all>
 
-                <select-all targets="h2">
-                    <on-click>
-                        <select-all targets="h3">
-                            <show></show>
+                        <select-all targets="h2">
+                            <on-click>
+                                <select-all targets="h3">
+                                    <show></show>
+                                </select-all>
+                            </on-click>
                         </select-all>
-                    </on-click>
-                </select-all>
-            </when> -->
+                    </when> -->
 
 
 
 
 
-          <!--
+        <!--
 
 
 
 
-            -->
+                    -->
             </textarea>
         </div>
 

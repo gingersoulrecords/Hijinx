@@ -16,7 +16,10 @@ function escapeClassName(className) {
         .replace(/!/g, "\\!")
         .replace(/:/g, "\\:")
         .replace(/\[/g, "\\[")
-        .replace(/\]/g, "\\]");
+        .replace(/\]/g, "\\]")
+        .replace(/\(/g, "\\(")
+        .replace(/\)/g, "\\)")
+        .replace(/\./g, "\\.");
 }
 
 function addCSSRule(selector, property, value, important = false) {
@@ -30,6 +33,7 @@ function processHTML(htmlString) {
     let styleTagContent = "";
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
+    console.log(doc.body);
 
     doc.body.querySelectorAll("*").forEach((elem) => {
         const classList = elem.className.split(/\s+/);
@@ -51,21 +55,21 @@ function processHTML(htmlString) {
                     prefix = prefix.slice(1);
                 }
 
-                let property = PROPERTY_MAPPING[prefix];
-                if (!property) {
-                    // If there's no mapping for the prefix, use the prefix as the property
-                    property = prefix;
-                }
-
-                if (prefix.startsWith("hover:")) {
-                    styleTagContent += addCSSRule(`.${escapedClassName}:hover`, property, value, important);
-                    ruleAdded = true;
+                let isHover = false;
+                if (prefix.includes("hover:")) {
+                    prefix = prefix.replace("hover:", "");
+                    isHover = true;
                 }
 
                 for (const [modifier, minWidth] of Object.entries(SIZE_MODIFIERS)) {
                     if (!ruleAdded && prefix.startsWith(modifier)) {
+                        let property = PROPERTY_MAPPING[prefix.slice(modifier.length)] || prefix.slice(modifier.length);
+                        let selector = `.${escapedClassName}`;
+                        if (isHover) {
+                            selector += ":hover";
+                        }
                         styleTagContent += `@media (min-width: ${minWidth}) {
-                            ${addCSSRule(`.${escapedClassName}`, property, value, important)}
+                            ${addCSSRule(selector, property, value, important)}
                         }\n`;
                         ruleAdded = true;
                         break;
@@ -73,7 +77,12 @@ function processHTML(htmlString) {
                 }
 
                 if (!ruleAdded) {
-                    styleTagContent += addCSSRule(`.${escapedClassName}`, property, value, important);
+                    let property = PROPERTY_MAPPING[prefix] || prefix;
+                    let selector = `.${escapedClassName}`;
+                    if (isHover) {
+                        selector += ":hover";
+                    }
+                    styleTagContent += addCSSRule(selector, property, value, important);
                 }
             }
         });
