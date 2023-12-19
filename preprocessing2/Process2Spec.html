@@ -1,0 +1,70 @@
+Process2Spec.html
+
+Lessons learned
+
+We need to have totally different functions for processing values, properties, and modifiers. We can’t use the same
+function for all three.
+
+Each class will get fed into this function, and we'll process it from right to left, starting with the value, then the
+property, then the modifiers.
+
+We need to be able to handle multiple modifiers, processed in the reverse order they appear in the class, or the order
+they appear from the right
+
+-split the Classes and store them as keys in an aviator object
+
+e.g. md:hover:text-align:center
+
+-within each of these class keys,
+store the escaped class selector (in this case, '.md\:hover\:text-align\:center' ),
+their css value ('center'),
+the css property ('text-align'),
+and modifiers, in order ('hover', 'md')
+
+-we can use these stored properties to build the processed class string
+-in this case, the string would go from being processed from
+
+.text-align\:center{
+text-align:center;
+}
+
+with the base property and value functions
+
+to
+
+matching the first modifier before the property name to know how to process the property (in this case, just add
+':hover' to the selector and place the property and value in the selector's block, making sure to keep the selector
+escaped)
+
+.hover\:text-align\:center:hover{
+text-align:center;
+}
+
+to
+
+matching the second modifier before the property name to know how to process the property (in this case, surround the
+selector with a media query and add the property and value to the selector's block, making sure to keep the selector
+escaped)
+
+@media(min-width:768px){
+
+.md\:hover\:text-align\:center:hover{
+text-align:center;
+}
+
+}
+
+We're basically passing a string around like hot potato, and different functions take turns building a starter string
+(property and value) and then mutating it with modifier functions.
+
+The only modifiers we need are:
+
+hover
+focus
+
+group and group-hover
+group aria
+
+media queries
+
+dark mode

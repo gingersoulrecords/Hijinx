@@ -28,11 +28,15 @@
 //in order to do this, we're going to be using the DOMParser to parse the html string into a DOM object, and then we'll be using the DOM object to extract the utility classes that match our regex.
 //in order to properly parse a class preview like 'bg' into a css rule like 'background', we're going to be using a mapping object that we'll call PROPERTY_MAPPING.
 
-const PROPERTY_MAPPING = {
-    "color": "color",
-    "bg": "background-color",
-    // Add more mappings as needed
-};
+
+window.aviator = {
+    propertyMap: {
+        "color": "color",
+        "bg": "background",
+        "px": (value) => `padding-left: ${value}; padding-right: ${value};`,
+        // Add more mappings as needed
+    },
+}
 
 // Function to create a DOMParser and parse the HTML string
 function createDOM(htmlString) {
@@ -52,67 +56,101 @@ function getColonClasses(element) {
     return colonClasses;
 }
 
-// // Function to process the string before the last colon
-// function processStringBeforeLastColon(str, PROPERTY_MAPPING) {
-
-//     console.log(str);
-
-//     let cssProperty;
-
-//     if (isCSSProperty(str)) {
-//         cssProperty = str;
-//     } else if (PROPERTY_MAPPING[str]) {
-//         cssProperty = PROPERTY_MAPPING[str];
-//     } else {
-//         console.error(`Unsupported CSS property: ${str}`);
-//         return '';
-//     }
-
-//     // Return the CSS selector with the colon escaped, and the CSS property
-//     return [`.${str.replace(':', '\\:')}`, cssProperty];
-// }
-
 // Function to process the string before the last colon
-function processStringBeforeLastColon(str, PROPERTY_MAPPING) {
+function processSelectorComponents(str) {
+    console.log(str);
     let cssProperty;
-
     if (isCSSProperty(str)) {
         cssProperty = str;
-    } else if (PROPERTY_MAPPING[str]) {
-        cssProperty = PROPERTY_MAPPING[str];
+    } else if (typeof window.aviator.propertyMap[str] === 'function') {
+        cssProperty = window.aviator.propertyMap[str];
+    } else if (window.aviator.propertyMap[str]) {
+        cssProperty = window.aviator.propertyMap[str];
     } else {
         console.error(`Unsupported CSS property: ${str}`);
         return '';
     }
-
     // Return the CSS property
     return cssProperty;
 }
 
-// Function to process the string after the last colon
-function processStringAfterLastColon(str) {
-    // In this case, the string after the last colon is the CSS value
-    return str;
-}
-
 // Function to convert a class name into a CSS rule
-function convertClassToCSSRule(className, PROPERTY_MAPPING) {
+function convertClassToCSSRule(className) {
+    //split the selector components off from the value
     const lastColonIndex = className.lastIndexOf(':');
-    const property = className.substring(0, lastColonIndex);
+    let selectorComponents = className.substring(0, lastColonIndex);
     const value = className.substring(lastColonIndex + 1);
 
-    let cssProperty = processStringBeforeLastColon(property, PROPERTY_MAPPING);
+    // Process any modifiers in the selector components
+    selectorComponents = processModifiers(selectorComponents);
+
+    let cssSelectorComponents = processSelectorComponents(selectorComponents);
     let cssValue = processStringAfterLastColon(value);
 
-    if (!cssProperty || !cssValue) {
+    if (!cssSelectorComponents || !cssValue) {
         return '';
     }
 
     // Use the entire initially found class as the CSS selector
     const cssSelector = `.${className.replace(':', '\\:')}`;
 
-    return `${cssSelector}{ ${cssProperty}: ${cssValue}; }`;
+    // If cssSelectorComponents is a function, call it with cssValue as the argument
+    if (typeof cssSelectorComponents === 'function') {
+        return `${cssSelector}{ ${cssSelectorComponents(cssValue)} }`;
+    }
+
+    return `${cssSelector}{ ${cssSelectorComponents}: ${cssValue}; }`;
 }
+
+// Function to process media and feature queries
+function processMediaAndFeatureQueries(selectorComponents) {
+    console.log('Processing media and feature queries:', selectorComponents);
+    // TODO: Add code here to process media and feature queries
+    return selectorComponents;
+}
+
+// Function to process pseudo-classes
+function processPseudoClasses(selectorComponents) {
+    console.log('Processing pseudo-classes:', selectorComponents);
+    // TODO: Add code here to process pseudo-classes
+    return selectorComponents;
+}
+
+// Function to process pseudo elements
+function processPseudoElements(selectorComponents) {
+    console.log('Processing pseudo elements:', selectorComponents);
+    // TODO: Add code here to process pseudo elements
+    return selectorComponents;
+}
+
+// Function to process attribute selectors
+function processAttributeSelectors(selectorComponents) {
+    console.log('Processing attribute selectors:', selectorComponents);
+    // TODO: Add code here to process attribute selectors
+    return selectorComponents;
+}
+
+// Function to process all modifiers
+function processModifiers(selectorComponents) {
+    console.log('Processing modifiers:', selectorComponents);
+    selectorComponents = processMediaAndFeatureQueries(selectorComponents);
+    selectorComponents = processPseudoClasses(selectorComponents);
+    selectorComponents = processPseudoElements(selectorComponents);
+    selectorComponents = processAttributeSelectors(selectorComponents);
+    return selectorComponents;
+}
+
+
+// Function to process the string after the last colon
+function processStringAfterLastColon(str) {
+    // Replace underscores with spaces
+    let cssValue = str.replace(/_/g, ' ');
+
+    // Return the CSS value
+    return cssValue;
+}
+
+
 
 // Check if the property is supported, using a dummy value
 function isCSSProperty(property) {
@@ -120,14 +158,14 @@ function isCSSProperty(property) {
 }
 
 // The main function
-function processHTML(htmlString, PROPERTY_MAPPING) {
+function processHTML(htmlString) {
     let styleTagContent = "";
     const doc = createDOM(htmlString);
 
     doc.body.querySelectorAll("*").forEach((elem) => {
         const colonClasses = getColonClasses(elem);
         colonClasses.forEach((className) => {
-            const cssRule = convertClassToCSSRule(className, PROPERTY_MAPPING);
+            const cssRule = convertClassToCSSRule(className);
             styleTagContent += cssRule;
         });
     });

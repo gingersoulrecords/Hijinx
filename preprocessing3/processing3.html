@@ -50,7 +50,7 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/css/css.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
-    <script src="process2.js"></script>
+    <script src="process3.js"></script>
     <script src="foldClasses.js"></script>
 
     <script>
@@ -73,7 +73,8 @@
 
         // Process HTML and update editor2 and output div
         editor1.on("change", function () {
-            var processedHTML = processHTML(editor1.getValue());
+            //var processedHTML = processHTML(editor1.getValue());
+            var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
             $("#output").html(processedHTML);
 
@@ -81,7 +82,8 @@
 
         // Execute the processing function when the window loads
         $(document).ready(function () {
-            var processedHTML = processHTML(editor1.getValue());
+            //var processedHTML = processHTML(editor1.getValue());
+            var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
             $("#output").html(processedHTML);
             $("body").removeClass("opacity-0");

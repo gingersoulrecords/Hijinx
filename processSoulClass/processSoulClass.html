@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Editor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/theme/material-palenight.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        .CodeMirror {
+            font-family: 'MonoLisa', monospace;
+            font-size: .8rem;
+            padding: 1rem 0;
+        }
+
+        .class-marker {
+            color: #c4e792;
+        }
+    </style>
+</head>
+
+<body class="p-16 grid grid-cols-2 gap-16 opacity-0x">
+    <div id="output" class="col-span-full"></div>
+
+    <!-- Editor 1 -->
+    <div id="input" class="font-mono">
+        <textarea id="editor1" class="w-full h-96 border p-8">md:hover:text-align:center</textarea>
+    </div>
+
+    <div id="processed" class="font-mono">
+        <!-- Editor 2 -->
+        <textarea id="editor2" class="w-full h-96 border p-8"></textarea>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/xml/xml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/css/css.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+    <script src="processSoulClass.js"></script>
+
+</body>
+
+</html>

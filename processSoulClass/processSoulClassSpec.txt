@@ -1,0 +1,28 @@
+processSoulClass
+
+start with
+
+1. store the classname
+2. store the escaped classname (which we'll need for the rule)
+3. split the classname by colons into value, property, and modifiers strings
+
+a. splitClassIntoValuesPropertiesAndModifiers is a function that will take a class in, and return an object with value, property, and a modifiers object.
+a1.start by splitting the classname into two, by the last colon.
+The string to the right of the colon is the value, and the string to the left is the 'modproperty, ' a string that may just be a css property, but also may have modifiers attached.
+a2. processModProperty is a function that will look at the modProperty string. If it has no colons, send it to processProperty as it's either a verbatim CSS property or a shorthand like 'px.' If it has colons, split it by its colons; the rightmost string will be the property that we send to processProperty, and the rest of the items should be stored in a modifiers object in reverse order.
+
+
+
+4. send value to processValue
+5. send property to processProperty
+6. send modifiers to processModifiers
+
+
+
+md:hover:text-align:center
+1. store the classname = md:hover:text-align:center
+2. store the escaped classname (don't forget the dot!) = .md\:hover\:text-align\:center
+3. split the classname by the LAST TWO colons
+  value = center
+  property = text-align
+  modifiers = md:hover
