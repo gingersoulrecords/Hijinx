@@ -73,7 +73,6 @@
 
         // Process HTML and update editor2 and output div
         editor1.on("change", function () {
-            //var processedHTML = processHTML(editor1.getValue());
             var processedHTML = window.processSoulClasses(editor1.getValue());
             //var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
@@ -83,7 +82,6 @@
 
         // Execute the processing function when the window loads
         $(document).ready(function () {
-            //var processedHTML = processHTML(editor1.getValue());
             var processedHTML = window.processSoulClasses(editor1.getValue());
             // var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);

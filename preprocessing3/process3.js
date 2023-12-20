@@ -37,8 +37,11 @@
         // For each of the classes, process them with processSoulClass and collect the CSS rules
         var cssRules = window.soulClassObjects.map(processSoulClass).join('\n'); // Join the CSS rules with newlines
 
+        // Beautify the CSS rules
+        var beautifiedCssRules = css_beautify(cssRules);
+
         // Prepend the CSS rules to the HTML string inside a <style> tag
-        var processedHTMLString = '<style>\n' + cssRules + '\n</style>\n' + htmlString;
+        var processedHTMLString = '<style>\n' + beautifiedCssRules + '\n</style>\n' + htmlString;
 
         // Return the processed HTML string
         return processedHTMLString;
@@ -50,7 +53,9 @@
         var className = soulClassObject.className;
 
         // Escape the class name and store it on the object
-        soulClassObject.escapedClassName = '.' + className.replace(/[:]/g, '\\:').replace(/[']/g, "\\'");
+        soulClassObject.escapedClassName = '.' + className.replace(/[^a-zA-Z0-9-_]/g, function (match) {
+            return '\\' + match;
+        });
 
         // Initialize prepCSSRule
         soulClassObject.prepCSSRule = {
