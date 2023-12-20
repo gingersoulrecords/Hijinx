@@ -1,3 +1,7 @@
+//notes
+
+//maybe we should add the declarations to prepCSSRule, so build
+
 (function ($) {
 
     // Create an empty soulclasses array on the window object
@@ -11,8 +15,7 @@
         window.soulclass.className = input;
 
         //store the escaped classname
-        window.soulclass.escapedClassName = '.' + input.replace(/[:]/g, '\\:');
-
+        window.soulclass.escapedClassName = '.' + input.replace(/[:]/g, '\\:').replace(/[']/g, "\\'");
         // Initialize prepCSSRule
         window.soulclass.prepCSSRule = {
             selector: window.soulclass.escapedClassName,
@@ -72,8 +75,12 @@
         window.soulclass.modifiersArray.forEach(function (modifier) {
             if (modifier === 'hover') {
                 window.soulclass.prepCSSRule.selector += ':hover';
-            } else if (modifier === 'md') {
-                window.soulclass.prepCSSRule.openingMediaQueryString = '@media(min-width:768px){';
+            } else if (modifier === 'before') {
+                window.soulclass.prepCSSRule.selector += '::before';
+            } else if (modifier === 'after') {
+                window.soulclass.prepCSSRule.selector += '::after';
+            } else if (breakpoints[modifier]) {
+                window.soulclass.prepCSSRule.openingMediaQueryString = '@media(min-width:' + breakpoints[modifier] + '){';
                 window.soulclass.prepCSSRule.closingMediaQueryString = '}';
             }
             // Add more modifiers here as needed
@@ -83,15 +90,27 @@
         window.soulclass.modifiersString = modifiers;
     }
 
+    // Define the breakpoints
+    var breakpoints = {
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px'
+        // Add more breakpoints here as needed
+    };
+
     // Mapping of abbreviations to CSS properties
     var propertyMap = {
         'bg': 'background',
+        'grid-cols': 'grid-template-columns',
         // Add more mappings here as needed
     };
 
     // Mapping of functions to CSS properties
     var functionMap = {
         'px': ['padding-left', 'padding-right'],
+        'mx': ['margin-left', 'margin-right'],
         // Add more mappings here as needed
     };
 
@@ -123,45 +142,15 @@
         //replace understores with spaces
         value = value.replace(/[_]/g, ' ');
 
+        // If the value starts with '--', add it as a CSS variable
+        if (value.startsWith('--')) {
+            value = 'var(' + value + ')';
+        }
 
         //set window.soulclass.valuesString to value
         window.soulclass.valuesString = value;
     }
 
-    function buildCSSRule() {
-        // Start with the escaped class name
-        var cssRule = window.soulclass.escapedClassName;
-
-        // For each modifier, add it to the class name
-        window.soulclass.modifiersArray.forEach(function (modifier) {
-            if (modifier === 'hover') {
-                cssRule += ':hover';
-            }
-            // Add more modifiers here as needed
-        });
-
-        // Add an opening curly brace
-        cssRule += " {\n";
-
-        // For each declaration, add a line with the property and value
-        window.soulclass.declarations.forEach(function (declaration) {
-            cssRule += "    " + declaration.property + ": " + declaration.value + ";\n";
-        });
-
-        // Add a closing curly brace
-        cssRule += "}\n";
-
-        // If 'md' modifier is present, wrap the CSS rule in a media query
-        window.soulclass.modifiersArray.forEach(function (modifier) {
-            if (modifier === 'md') {
-                cssRule = "@media(min-width:768px){\n" + cssRule + "}\n";
-            }
-            // Add more modifiers here as needed
-        });
-
-        // Return the CSS rule
-        return cssRule;
-    }
 
     function buildCSSRule() {
         // Start with the opening media query string
@@ -183,16 +172,28 @@
     }
 
 
-
-
-
     //REFRESHING
 
     function refresh() {
         console.clear();
-        window.soulclass = {};
         var input = $('#editor1').val();
-        var output = processSoulClass(input);
+
+        // Split the input into individual classes and trim each class
+        var classes = input.split(' ').map(function (className) {
+            return className.trim();
+        });
+
+        // Process each class
+        var output = classes.map(function (className) {
+            // Only process the class if it contains a colon
+            if (className.includes(':')) {
+                // Reset window.soulclass for each class
+                window.soulclass = {};
+
+                // Process the class and return the output
+                return processSoulClass(className);
+            }
+        }).filter(Boolean).join('\n'); // Join the output with newlines
 
         // Beautify the CSS
         var beautifiedOutput = css_beautify(output);

@@ -30,7 +30,7 @@
         <textarea id="editor1" class="w-full h-96 border">
 
 <div class="">
-    <h1 class="text-2xl font-bold text-align:center color:blue border:--accentBorder">Hello World</h1>
+    <h1 class="text-align:center color:blue border:--accentBorder">Hello World</h1>
     <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
 </div>
 
@@ -74,7 +74,8 @@
         // Process HTML and update editor2 and output div
         editor1.on("change", function () {
             //var processedHTML = processHTML(editor1.getValue());
-            var processedHTML = editor1.getValue();
+            var processedHTML = window.processSoulClasses(editor1.getValue());
+            //var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
             $("#output").html(processedHTML);
 
@@ -83,7 +84,8 @@
         // Execute the processing function when the window loads
         $(document).ready(function () {
             //var processedHTML = processHTML(editor1.getValue());
-            var processedHTML = editor1.getValue();
+            var processedHTML = window.processSoulClasses(editor1.getValue());
+            // var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
             $("#output").html(processedHTML);
             $("body").removeClass("opacity-0");

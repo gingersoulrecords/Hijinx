@@ -30,3 +30,9 @@ md:hover:text-align:center
   value = center
   property = text-align
   modifiers = md:hover
+---------------------------------------------------------------------------
+
+
+Aviator
+
+a function that you can send an html string to and have it return the same html with a style tag above it, defining all coloned classes.
