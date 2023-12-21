@@ -15,12 +15,16 @@ function toggleClassMarker(codeMirrorInstance, codeMirrorElement) {
             marker.textContent = '⋅';
             var mark = codeMirrorInstance.markText(from, to, { className: 'hidden', replacedWith: marker });
 
+            // Store the class content
+            var classContent = text.slice(match.index, match.index + match[0].length);
+
             // Add click event listener to the marker
-            (function (mark) {
+            (function (mark, classContent) {
                 marker.addEventListener('click', function () {
+                    console.log(classContent); // Log the class content
                     mark.clear();
                 });
-            })(mark);
+            })(mark, classContent);
         }
     } else {
         codeMirrorInstance.getAllMarks().forEach(function (mark) {

@@ -32,7 +32,7 @@
         window.soulClassObjects = classes;
 
         // Log the result
-        console.log(window.soulClassObjects);
+        //console.log(window.soulClassObjects);
 
         // For each of the classes, process them with processSoulClass and collect the CSS rules
         var cssRules = window.soulClassObjects.map(processSoulClass).join('\n'); // Join the CSS rules with newlines
