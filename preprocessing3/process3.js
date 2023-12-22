@@ -19,7 +19,12 @@
     // Mapping of functions to CSS properties
     var functionMap = {
         'px': ['padding-left', 'padding-right'],
+        'padding-x': ['padding-left', 'padding-right'],
+        'py': ['padding-top', 'padding-bottom'],
+        'padding-y': ['padding-top', 'padding-bottom'],
         'mx': ['margin-left', 'margin-right'],
+        'my': ['margin-top', 'margin-bottom'],
+
         // Add more mappings here as needed
     };
 

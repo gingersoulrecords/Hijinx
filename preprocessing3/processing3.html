@@ -15,8 +15,13 @@
             padding: 1rem 0;
         }
 
-        .class-marker {
-            color: #c4e792;
+        .mark {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .mark:hover {
+            background-color: lightgray;
         }
     </style>
 </head>
@@ -28,12 +33,14 @@
     <div id="input">
         <button class="toggle-classes">Toggle Classes</button>
         <textarea id="editor1" class="w-full h-96 border">
-
-<div class="">
-    <h1 class="text-align:center color:blue">Hello World</h1>
-    <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
-</div>
-
+<section class="relative padding:--section px-doc">
+    <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
+        <item class="flex flex-col items-start lc-mb-0i">
+            <p class="type-larger-heading text-pop">Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
+            <p class="type-small-readable">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda delectus porro ducimus dolore consequatur, blanditiis illum aperiam.</p>
+        </item>
+    </subsection>
+</section>
     </textarea>
     </div>
 
@@ -52,6 +59,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
     <script src="process3.js"></script>
     <script src="foldClasses.js"></script>
+    <script src="classFolding.js"></script>
 
     <script>
 
