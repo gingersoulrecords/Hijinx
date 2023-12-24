@@ -100,10 +100,10 @@
         // Replace underscores with spaces
         value = value.replace(/[_]/g, ' ');
 
-        // If the value starts with '--', add it as a CSS variable
-        if (value.startsWith('--')) {
-            value = 'var(' + value + ')';
-        }
+        // If the value contains '--' followed by alphanumeric characters, add it as a CSS variable
+        value = value.replace(/--\w+/g, function (match) {
+            return 'var(' + match + ')';
+        });
 
         // Set soulClassObject.valuesString to value
         soulClassObject.valuesString = value;

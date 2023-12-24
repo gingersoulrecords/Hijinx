@@ -32,7 +32,13 @@
     <!-- Editor 1 -->
     <div id="input">
         <button class="toggle-classes">Toggle Classes</button>
+        <button class="sort-classes">Sort Classes</button>
         <textarea id="editor1" class="w-full h-96 border">
+<style>
+:root{
+    --myColor:blue;
+}
+</style>
 <section class="relative padding:--section px-doc">
     <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
         <item class="flex flex-col items-start lc-mb-0i">
@@ -59,7 +65,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
     <script src="process3.js"></script>
     <script src="foldClasses.js"></script>
-    <script src="classFolding.js"></script>
+    <script src="sortClasses.js"></script>
+    <script src="classOrder.js"></script>
+    <!-- <script src="classFolding.js"></script> -->
 
     <script>
 
@@ -103,6 +111,13 @@
 
             $(".toggle-classes").click(function () {
                 toggleClassMarker(codeMirrorInstance, codeMirrorElement);
+            });
+
+            // Assuming your CodeMirror instance is stored in a variable named 'editor'
+            $('.sort-classes').click(function () {
+                var htmlContent = editor1.getValue(); // Get the current content of the editor
+                var sortedHtml = sortClasses(htmlContent); // Sort the classes in the HTML
+                editor1.setValue(sortedHtml); // Set the content of the editor to the sorted HTML
             });
         });
 
