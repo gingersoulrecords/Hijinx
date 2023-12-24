@@ -13,6 +13,7 @@
             font-family: 'MonoLisa', monospace;
             font-size: .8rem;
             padding: 1rem 0;
+            height: auto;
         }
 
         .mark {
@@ -26,35 +27,49 @@
     </style>
 </head>
 
-<body class="p-16 grid grid-cols-2 gap-16 opacity-0">
-    <div id="output" class="col-span-full"></div>
+<body class="p-16 opacity-0">
+    <!-- output -->
+    <div id="output" class="col-span-full row-start-1"></div>
 
-    <!-- Editor 1 -->
-    <div id="input">
-        <button class="toggle-classes">Toggle Classes</button>
-        <button class="sort-classes">Sort Classes</button>
-        <textarea id="editor1" class="w-full h-96 border">
-<style>
+    <!-- editors -->
+    <div class="grid grid-cols-2 gap-16 mt-32">
+
+        <!-- inputs -->
+        <div id="inputs" class="grid grid-cols-1 gap-16">
+            <!-- Editor 0 -->
+            <div id="input0" class="">
+                <textarea id="editor0" class="w-full h-96 border">
 :root{
-    --myColor:blue;
+--myColor:blue;
 }
-</style>
+</textarea>
+            </div>
+
+            <!-- Editor 1 -->
+            <div id="input" class="">
+                <button class="toggle-classes">Toggle Classes</button>
+                <button class="sort-classes">Sort Classes</button>
+                <textarea id="editor1" class="w-full h-96 border">
 <section class="relative padding:--section px-doc">
-    <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
-        <item class="flex flex-col items-start lc-mb-0i">
-            <p class="type-larger-heading text-pop">Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
-            <p class="type-small-readable">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda delectus porro ducimus dolore consequatur, blanditiis illum aperiam.</p>
-        </item>
-    </subsection>
+<subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
+    <item class="flex flex-col items-start lc-mb-0i">
+        <p class="type-larger-heading text-pop">Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
+        <p class="type-small-readable">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda delectus porro ducimus dolore consequatur, blanditiis illum aperiam.</p>
+    </item>
+</subsection>
 </section>
-    </textarea>
+</textarea>
+            </div>
+        </div>
+
+        <!-- processed -->
+        <div id="processed" class="">
+            <!-- Editor 2 -->
+            <textarea id="editor2" class="w-full h-96 border"></textarea>
+        </div>
+
     </div>
 
-    <div id="processed">
-        <!-- Editor 2 -->
-        <textarea id="editor2" class="w-full h-96 border"></textarea>
-
-    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.js"></script>
@@ -64,14 +79,21 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
     <script src="process3.js"></script>
-    <script src="foldClasses.js"></script>
+    <!-- <script src="foldClasses.js"></script> -->
     <script src="sortClasses.js"></script>
     <script src="classOrder.js"></script>
-    <!-- <script src="classFolding.js"></script> -->
+    <script src="classFolding.js"></script>
 
     <script>
 
         // Initialize CodeMirror instances
+        var editor0 = CodeMirror.fromTextArea(document.getElementById("editor0"), {
+            lineNumbers: true,
+            mode: "css",
+            theme: "material-palenight",
+            lineWrapping: true
+        });
+
         var editor1 = CodeMirror.fromTextArea(document.getElementById("editor1"), {
             lineNumbers: true,
             mode: "htmlmixed",
@@ -85,6 +107,19 @@
             readOnly: true,
             theme: "material-palenight",
             lineWrapping: true
+        });
+
+
+        // Add event listener to editor0
+        editor0.on("change", function () {
+            var cssContent = editor0.getValue();
+            var styleTag = `<style id="dynamic-style">${cssContent}</style>`;
+
+            // Remove existing style tag
+            $("#dynamic-style").remove();
+
+            // Add new style tag before #output
+            $("#output").before(styleTag);
         });
 
         // Process HTML and update editor2 and output div
@@ -119,6 +154,17 @@
                 var sortedHtml = sortClasses(htmlContent); // Sort the classes in the HTML
                 editor1.setValue(sortedHtml); // Set the content of the editor to the sorted HTML
             });
+
+            // Add the style tag from editor0
+            var cssContent = editor0.getValue();
+            var styleTag = `<style id="dynamic-style">${cssContent}</style>`;
+
+            // Remove existing style tag
+            $("#dynamic-style").remove();
+
+            // Add new style tag before #output
+            $("#output").before(styleTag);
+
         });
 
     </script>
