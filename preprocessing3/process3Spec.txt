@@ -1,0 +1,8 @@
+Process3Spec
+
+We have two textareas, one for input, and one for output.
+
+When the doc is ready:
+
+1. initialize the editors with initializeCodeMirror.
+2.

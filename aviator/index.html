@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/theme/material-palenight.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="grid gap-16 w-full border-8x border-green-400x p-16">
+
+        <div class="outputs-pane border-8 border-black">
+            <div id="output"></div>
+        </div>
+
+        <div class="inputs-pane grid grid-cols-2 gap-8">
+            <!-- css -->
+            <div class="border-4x border-blue-40x">
+                <textarea id="css" class="w-full h-96 border">
+                    :root{
+                    --myColor:blue;
+                    }
+                </textarea>
+            </div>
+            <!-- input -->
+            <div class="border-4x border-blue-400x">
+                <textarea id="input" class="w-full h-96 border">
+                    <section class="relative padding:--section px-doc">
+                        <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
+                            <item class="flex flex-col items-start lc-mb-0i">
+                                <p class="type-larger-heading text-pop font-weight:bold font-size:3rem">Time to build some components with this thing.</p>
+                                <p class="type-small-readable">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda delectus porro ducimus dolore consequatur, blanditiis illum aperiam.</p>
+                            </item>
+                        </subsection>
+                    </section>
+                </textarea>
+            </div>
+
+
+        </div>
+        <div class="process-pane">
+            <!-- output -->
+            <div class="border-4x border-blue-400x">
+                <textarea id="processed" class="w-full h-96 border">
+                </textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/xml/xml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/css/css.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify-html.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/aviator.js"></script>
+
+    <script src="js/process3.js"></script>
+    <script src="js/classOrder.js"></script>
+</body>
+
+</html>

@@ -24,6 +24,10 @@
         .mark:hover {
             background-color: lightgray;
         }
+
+        .emmet-abbreviation-preview {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -32,7 +36,7 @@
     <div id="output" class="col-span-full row-start-1"></div>
 
     <!-- editors -->
-    <div class="grid grid-cols-2 gap-16 mt-32">
+    <div class="flex items-start gap-16 mt-32">
 
         <!-- inputs -->
         <div id="inputs" class="grid grid-cols-1 gap-16">
@@ -47,13 +51,13 @@
 
             <!-- Editor 1 -->
             <div id="input" class="">
-                <button class="toggle-classes">Toggle Classes</button>
+                <button class="toggle-all">Toggle All</button>
                 <button class="sort-classes">Sort Classes</button>
                 <textarea id="editor1" class="w-full h-96 border">
 <section class="relative padding:--section px-doc">
 <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
     <item class="flex flex-col items-start lc-mb-0i">
-        <p class="type-larger-heading text-pop">Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
+        <p class="type-larger-heading text-pop font-weight:bold font-size:3rem">Time to build some components with this thing.</p>
         <p class="type-small-readable">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda delectus porro ducimus dolore consequatur, blanditiis illum aperiam.</p>
     </item>
 </subsection>
@@ -79,10 +83,10 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
     <script src="process3.js"></script>
-    <!-- <script src="foldClasses.js"></script> -->
     <script src="sortClasses.js"></script>
     <script src="classOrder.js"></script>
     <script src="classFolding.js"></script>
+    <script src="ssbrowser.js"></script>
 
     <script>
 
@@ -98,7 +102,22 @@
             lineNumbers: true,
             mode: "htmlmixed",
             theme: "material-palenight",
-            lineWrapping: true
+            lineWrapping: true,
+            extraKeys: {
+                'Tab': function (cm) {
+                    var cursor = cm.getCursor();
+                    var line = cm.getLine(cursor.line);
+                    var lineToCursor = line.substr(0, cursor.ch).trim();
+
+                    // Use Emmet or insert a soft tab
+                    if (lineToCursor.length > 0) {
+                        cm.execCommand('emmetExpandAbbreviationAll');
+                    } else {
+                        cm.execCommand('insertSoftTab');
+                    }
+                }
+            }
+
         });
 
         var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), {
@@ -110,8 +129,21 @@
         });
 
 
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        };
+
         // Add event listener to editor0
-        editor0.on("change", function () {
+        editor0.on("change", debounce(function () {
             var cssContent = editor0.getValue();
             var styleTag = `<style id="dynamic-style">${cssContent}</style>`;
 
@@ -120,16 +152,14 @@
 
             // Add new style tag before #output
             $("#output").before(styleTag);
-        });
+        }, 250)); // 300ms delay
 
         // Process HTML and update editor2 and output div
-        editor1.on("change", function () {
+        editor1.on("change", debounce(function () {
             var processedHTML = window.processSoulClasses(editor1.getValue());
-            //var processedHTML = editor1.getValue();
             editor2.setValue(processedHTML);
             $("#output").html(processedHTML);
-
-        });
+        }, 250)); // 300ms delay
 
         // Execute the processing function when the window loads
         $(document).ready(function () {
@@ -143,9 +173,8 @@
             var codeMirrorInstance = codeMirrorElement[0].CodeMirror;
 
 
-
-            $(".toggle-classes").click(function () {
-                toggleClassMarker(codeMirrorInstance, codeMirrorElement);
+            $(".toggle-all").click(function () {
+                toggleAllMarks();
             });
 
             // Assuming your CodeMirror instance is stored in a variable named 'editor'

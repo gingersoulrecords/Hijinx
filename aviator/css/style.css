@@ -1,0 +1,19 @@
+.CodeMirror {
+  font-family: "MonoLisa", monospace;
+  font-size: 0.8rem;
+  padding: 1rem 0;
+  height: auto;
+}
+
+.mark {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mark:hover {
+  background-color: lightgray;
+}
+
+.emmet-abbreviation-preview {
+  display: none !important;
+}
