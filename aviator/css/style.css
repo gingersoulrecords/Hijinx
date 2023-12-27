@@ -6,12 +6,7 @@
 }
 
 .mark {
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.mark:hover {
-  background-color: lightgray;
+  color: #b4d88c;
 }
 
 .emmet-abbreviation-preview {

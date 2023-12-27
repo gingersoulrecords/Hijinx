@@ -200,6 +200,100 @@
             // CLASS FOLDING
             // ====================
 
+            setupLongPressOnClassAttributes: function (codeMirrorInstance, elementClass) {
+                var longPressTimeout;
+
+                // Get the actual CodeMirror element
+                var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
+
+                // Set up mousedown event handler
+                codeMirrorElement.on('mousedown', elementClass, function (event) {
+                    longPressTimeout = setTimeout(function () {
+                        // Get the line number from the event's coordinates
+                        var position = codeMirrorInstance.coordsChar({
+                            left: event.pageX,
+                            top: event.pageY
+                        });
+                        var lineNumber = position.line;
+
+                        // Show an alert when a long press is detected
+                        console.log('Long press detected on line ' + (lineNumber + 1));
+
+                        // Check for a selection
+                        var selection = codeMirrorInstance.getSelection();
+                        if (selection) {
+                            // Mark the class attributes in the selection
+                            this.markTextInSelection(codeMirrorInstance, lineNumber);
+                        } else {
+                            // Mark the class attributes on the current line
+                            this.markTextOnLine(codeMirrorInstance, lineNumber);
+                        }
+
+                    }.bind(this), 250);  // Bind 'this' to the timeout function
+                }.bind(this));  // Bind 'this' to the event handler function
+
+                // Clear the timeout on mouseup to prevent the alert from being shown if the press is not long enough
+                codeMirrorElement.on('mouseup', elementClass, function () {
+                    clearTimeout(longPressTimeout);
+                });
+            },
+
+            markTextOnLine: function (codeMirrorInstance, lineNumber) {
+                // Initialize the marks object if it doesn't exist
+                this.marks = this.marks || {};
+
+                // Get the line text
+                var line = codeMirrorInstance.getLine(lineNumber);
+
+                // Find the indices of the double quotes surrounding the class attribute value
+                var startQuoteIndex = line.indexOf('class="');
+                if (startQuoteIndex !== -1) {
+                    startQuoteIndex += 6; // Move the start index to the start of the first double quote
+                    var endQuoteIndex = line.indexOf('"', startQuoteIndex + 1) + 1; // Move the end index to the end of the second double quote
+
+                    // Get the marked text
+                    var markedText = line.substring(startQuoteIndex, endQuoteIndex);
+
+                    // If a mark already exists for this text, clear it and return
+                    if (this.marks[markedText]) {
+                        this.marks[markedText].clear();
+                        delete this.marks[markedText];
+                        return;
+                    }
+
+                    // Create the start and end positions
+                    var from = { line: lineNumber, ch: startQuoteIndex };
+                    var to = { line: lineNumber, ch: endQuoteIndex };
+
+                    // Create a span element to hold the mark
+                    var replacedWith = document.createElement('span');
+                    replacedWith.className = 'mark'; // assign the 'mark' class to the replacedWith element
+                    replacedWith.innerText = '❋'; // or any other text or element you want to replace with
+
+                    // Add the mark as a widget and store it in the marks object
+                    this.marks[markedText] = codeMirrorInstance.markText(from, to, { replacedWith: replacedWith, readOnly: true });
+                }
+            },
+
+            markTextInSelection: function (codeMirrorInstance, lineNumber) {
+                // Get the start and end lines of the selection
+                var startLine = codeMirrorInstance.getCursor("start").line;
+                var endLine = codeMirrorInstance.getCursor("end").line;
+
+                // Iterate over the lines in the selection
+                for (var i = startLine; i <= endLine; i++) {
+                    // Mark the class attributes on the line
+                    this.markTextOnLine(codeMirrorInstance, i);
+                }
+            },
+
+
+
+
+
+
+
+
 
 
             // ====================
@@ -217,6 +311,9 @@
                 // Process the inputs after initializing the editors
                 this.processHTMLInput();
                 this.processCSSInput();
+
+                this.setupLongPressOnClassAttributes(this.editors.input, '.cm-attribute');
+
 
             }
         };
