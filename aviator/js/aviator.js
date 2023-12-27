@@ -258,7 +258,7 @@
                     if (this.marks[markedText]) {
                         this.marks[markedText].clear();
                         delete this.marks[markedText];
-                        return;
+                        return false; // Return false to indicate that the mark was cleared
                     }
 
                     // Create the start and end positions
@@ -272,6 +272,7 @@
 
                     // Add the mark as a widget and store it in the marks object
                     this.marks[markedText] = codeMirrorInstance.markText(from, to, { replacedWith: replacedWith, readOnly: true });
+                    return true; // Return true to indicate that the mark was created
                 }
             },
 
@@ -280,10 +281,35 @@
                 var startLine = codeMirrorInstance.getCursor("start").line;
                 var endLine = codeMirrorInstance.getCursor("end").line;
 
+                // Determine whether to create or clear the marks based on the state of the mark on the current line
+                var createMark = this.markTextOnLine(codeMirrorInstance, lineNumber);
+
                 // Iterate over the lines in the selection
                 for (var i = startLine; i <= endLine; i++) {
-                    // Mark the class attributes on the line
-                    this.markTextOnLine(codeMirrorInstance, i);
+                    // Skip the current line
+                    if (i === lineNumber) continue;
+
+                    // Get the line text
+                    var line = codeMirrorInstance.getLine(i);
+
+                    // Find the indices of the double quotes surrounding the class attribute value
+                    var startQuoteIndex = line.indexOf('class="');
+                    if (startQuoteIndex !== -1) {
+                        startQuoteIndex += 6; // Move the start index to the start of the first double quote
+                        var endQuoteIndex = line.indexOf('"', startQuoteIndex + 1) + 1; // Move the end index to the end of the second double quote
+
+                        // Get the marked text
+                        var markedText = line.substring(startQuoteIndex, endQuoteIndex);
+
+                        // If a mark already exists for this text and we're creating marks, skip this line
+                        if (createMark && this.marks[markedText]) continue;
+
+                        // If a mark doesn't exist for this text and we're clearing marks, skip this line
+                        if (!createMark && !this.marks[markedText]) continue;
+
+                        // Mark the class attributes on the line
+                        this.markTextOnLine(codeMirrorInstance, i);
+                    }
                 }
             },
 
