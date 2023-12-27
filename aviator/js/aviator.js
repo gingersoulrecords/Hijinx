@@ -313,6 +313,34 @@
                 }
             },
 
+            markAll: function (codeMirrorInstance) {
+                // Initialize the marks object if it doesn't exist
+                this.marks = this.marks || {};
+                var lineCount = codeMirrorInstance.lineCount();
+                for (var i = 0; i < lineCount; i++) {
+                    // If a mark already exists for this line, skip it
+                    var line = codeMirrorInstance.getLine(i);
+                    var startQuoteIndex = line.indexOf('class="');
+                    if (startQuoteIndex !== -1) {
+                        startQuoteIndex += 6; // Move the start index to the start of the first double quote
+                        var endQuoteIndex = line.indexOf('"', startQuoteIndex + 1) + 1; // Move the end index to the end of the second double quote
+                        var markedText = line.substring(startQuoteIndex, endQuoteIndex);
+                        if (!this.marks[markedText]) {
+                            this.markTextOnLine(codeMirrorInstance, i);
+                        }
+                    }
+                }
+            },
+
+            clearAllMarks: function () {
+                for (var mark in this.marks) {
+                    if (this.marks.hasOwnProperty(mark)) {
+                        this.marks[mark].clear();
+                    }
+                }
+                this.marks = {};
+            },
+
 
 
 
@@ -339,6 +367,17 @@
                 this.processCSSInput();
 
                 this.setupLongPressOnClassAttributes(this.editors.input, '.cm-attribute');
+
+                // Bind the methods to the buttons
+                $('.markAll').click(function () {
+                    // Assuming 'input' is the key for the CodeMirror instance you want to mark
+                    this.markAll(this.editors.input);
+                }.bind(aviator));
+
+                $('.clearAllMarks').click(function () {
+                    // Assuming 'input' is the key for the CodeMirror instance you want to clear
+                    this.clearAllMarks(this.editors.input);
+                }.bind(aviator));
 
 
             }
