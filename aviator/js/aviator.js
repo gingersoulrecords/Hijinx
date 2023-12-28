@@ -26,7 +26,26 @@
                     lineNumbers: true,
                     mode: mode,
                     theme: "material-palenight",
-                    lineWrapping: true
+                    lineWrapping: true,
+                    foldGutter: true,
+                    foldOptions: {
+                        minFoldSize: 1
+                    },
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+                    extraKeys: {
+                        'Tab': function (cm) {
+                            var cursor = cm.getCursor();
+                            var line = cm.getLine(cursor.line);
+                            var lineToCursor = line.substr(0, cursor.ch).trim();
+
+                            // Use Emmet or insert a soft tab
+                            if (lineToCursor.length > 0) {
+                                cm.execCommand('emmetExpandAbbreviationAll');
+                            } else {
+                                cm.execCommand('insertSoftTab');
+                            }
+                        }
+                    }
                 };
             },
 
@@ -175,6 +194,9 @@
                 // Set the sorted content in the input editor
                 this.editors.input.setValue(sortedInputContent);
 
+                this.beautifyAllEditors();
+
+
                 var editorsContent = {};
 
                 // Get the content of each editor and store it in the editorsContent object
@@ -200,14 +222,97 @@
             // CLASS FOLDING
             // ====================
 
+
+            // NEW
+
+
+            handleLongPressOnClassAttribute: function (codeMirrorInstance) {
+                var self = this; // Store a reference to this
+                var longPressTimeout;
+
+                // Get the actual CodeMirror element
+                var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
+                var codeMirrorCodeElement = codeMirrorElement.find('.CodeMirror-code');
+
+                // Set up mousedown event handler
+                codeMirrorCodeElement.on('mousedown', '.cm-attribute', function (event) {
+                    var targetElement = $(event.target);
+                    if (targetElement.text() !== 'class') {
+                        return;
+                    }
+
+                    longPressTimeout = setTimeout(() => {
+                        // Get the position of the mouse event in the CodeMirror document
+                        var position = codeMirrorInstance.coordsChar({
+                            left: event.pageX,
+                            top: event.pageY
+                        });
+
+                        // Call the new method on a successful long press
+                        self.selectTokenAtPosition(codeMirrorInstance, position);
+                    }, 250); // 250 ms = 1/4 second
+
+                    // Clear the timeout if the mouse is released before the long press duration
+                    $(document).on('mouseup', function () {
+                        clearTimeout(longPressTimeout);
+                    });
+                });
+            },
+
+
+
+            selectTokenAtPosition: function (codeMirrorInstance, position) {
+                // Get the token at the position
+                var token = codeMirrorInstance.getTokenAt(position);
+
+                // Set the selection to the token
+                var startPosition = { line: position.line, ch: token.start };
+                var endPosition = { line: position.line, ch: token.end };
+                codeMirrorInstance.setSelection(startPosition, endPosition);
+
+                // Shift the selection to the next token
+                this.shiftSelectionToClassToken(codeMirrorInstance);
+            },
+
+            shiftSelectionToClassToken: function (codeMirrorInstance) {
+                // Get the current selection
+                var selection = codeMirrorInstance.getSelection();
+
+                // Get the position of the end of the selection
+                var position = codeMirrorInstance.getCursor('end');
+
+                // Move the position one character to the right
+                position.ch += 2;
+
+                // Get the token at the new position
+                var token = codeMirrorInstance.getTokenAt(position);
+
+                // Set the selection to the new token
+                var startPosition = { line: position.line, ch: token.start };
+                var endPosition = { line: position.line, ch: token.end };
+                codeMirrorInstance.setSelection(startPosition, endPosition);
+
+                // Log the start and end positions of the final selection
+                console.log('Start position:', startPosition);
+                console.log('End position:', endPosition);
+            },
+
+
+
+
+
+
+            //OLD
+
             setupLongPressOnClassAttributes: function (codeMirrorInstance, elementClass) {
                 var longPressTimeout;
 
                 // Get the actual CodeMirror element
                 var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
+                var codeMirrorCodeElement = codeMirrorElement.find('.CodeMirror-code');
 
                 // Set up mousedown event handler
-                codeMirrorElement.on('mousedown', elementClass, function (event) {
+                codeMirrorCodeElement.on('mousedown', elementClass, function (event) {
                     longPressTimeout = setTimeout(function () {
                         // Get the line number from the event's coordinates
                         var position = codeMirrorInstance.coordsChar({
@@ -273,6 +378,7 @@
                     // Add the mark as a widget and store it in the marks object
                     this.marks[markedText] = codeMirrorInstance.markText(from, to, { replacedWith: replacedWith, readOnly: true });
                     return true; // Return true to indicate that the mark was created
+
                 }
             },
 
@@ -366,18 +472,11 @@
                 this.processHTMLInput();
                 this.processCSSInput();
 
-                this.setupLongPressOnClassAttributes(this.editors.input, '.cm-attribute');
+                this.handleLongPressOnClassAttribute(this.editors.input);
 
-                // Bind the methods to the buttons
-                $('.markAll').click(function () {
-                    // Assuming 'input' is the key for the CodeMirror instance you want to mark
-                    this.markAll(this.editors.input);
-                }.bind(aviator));
+                //this.setupLongPressOnClassAttributes(this.editors.input, '.cm-attribute');
 
-                $('.clearAllMarks').click(function () {
-                    // Assuming 'input' is the key for the CodeMirror instance you want to clear
-                    this.clearAllMarks(this.editors.input);
-                }.bind(aviator));
+
 
 
             }

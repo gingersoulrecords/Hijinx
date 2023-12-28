@@ -13,6 +13,37 @@
     var propertyMap = {
         'bg': 'background',
         'grid-cols': 'grid-template-columns',
+        'd': 'display',
+        //flex direction
+        'dir': 'flex-direction',
+        'fd': 'flex-direction',
+        'jc': 'justify-content',
+        'ai': 'align-items',
+        'p': 'padding',
+        'pt': 'padding-top',
+        'pr': 'padding-right',
+        'pb': 'padding-bottom',
+        'pl': 'padding-left',
+        'm': 'margin',
+        'mt': 'margin-top',
+        'mr': 'margin-right',
+        'mb': 'margin-bottom',
+        'ml': 'margin-left',
+        'w': 'width',
+        'h': 'height',
+        'min-w': 'min-width',
+        'min-h': 'min-height',
+        'max-w': 'max-width',
+        'max-h': 'max-height',
+
+        'size': 'font-size',
+        'weight': 'font-weight',
+        'lh': 'line-height',
+        'leading': 'line-height',
+        'ls': 'letter-spacing',
+        'tracking': 'letter-spacing',
+
+
         // Add more mappings here as needed
     };
 
@@ -74,12 +105,6 @@
         //split the classname into values, properties, and modifiers
         splitClassIntoValuesPropertiesAndModifiers(className, soulClassObject);
 
-
-        // // Return a CSS rule string
-        // // For now, let's just return a rule that sets the color to red
-        // // You can replace this with your own CSS rule
-        // return soulClassObject.escapedClassName + ' { color: red; }';
-
         // Build the CSS rule and return it
         return buildCSSRule(soulClassObject);
 
@@ -112,6 +137,11 @@
             value = value.slice(0, -1) + ' !important';
         }
 
+        // If the value ends with ';', remove the semicolon
+        if (value.endsWith(';')) {
+            value = value.slice(0, -1);
+        }
+
         // Set soulClassObject.valuesString to value
         soulClassObject.valuesString = value;
     }
@@ -139,13 +169,13 @@
         // Initialize declarations array if it doesn't exist
         soulClassObject.declarations = soulClassObject.declarations || [];
 
-        // Case 1: property is a CSS property
-        if (CSS.supports(property, "initial")) {
-            soulClassObject.declarations.push({ property: property, value: soulClassObject.valuesString });
-        }
-        // Case 2: property is an abbreviation
-        else if (property in propertyMap) {
+        // Case 1: property is an abbreviation
+        if (property in propertyMap) {
             soulClassObject.declarations.push({ property: propertyMap[property], value: soulClassObject.valuesString });
+        }
+        // Case 2: property is a CSS property
+        else if (CSS.supports(property, "initial")) {
+            soulClassObject.declarations.push({ property: property, value: soulClassObject.valuesString });
         }
         // Case 3: property is a function
         else if (property in functionMap) {

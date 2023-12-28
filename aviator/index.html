@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aviator</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/lib/codemirror.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/theme/material-palenight.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/theme/material-palenight.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css"
+        integrity="sha512-YwkMTlTHn8dBnwa47IF+cKsS00HPiiVhQ4DpwT1KF2gUftfFR7aefepabSPLAs6zrMyD89M3w0Ow6mQ5XJEUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <div class="grid gap-16 w-full border-8x border-green-400x p-16">
+    <div class="grid gap-16 w-full border-8x border-green-400x p-16x">
 
         <div class="outputs-pane border-8 border-black">
             <div id="output"></div>
         </div>
 
-        <div class="inputs-pane grid grid-cols-2 gap-8">
+        <div class="inputs-pane fixed right-0 w-1/3 h-full overflow-auto flex flex-col gap-8">
             <!-- css -->
-            <div class="border-4x border-blue-40x">
+            <div class="border-4x border-blue-40x" style="height:20vh;overflow:auto;">
                 <textarea id="css" class="w-full h-96 border">
                     :root{
                     --myColor:blue;
@@ -29,9 +34,9 @@
                 </textarea>
             </div>
             <!-- input -->
-            <div class="border-4x border-blue-400x">
-                <button class="markAll">Mark All</button>
-                <button class="clearAllMarks">Clear All Marks</button>
+            <div class="border-4x border-blue-400x" style="height:60vh;overflow:auto;">
+                <!-- <button class="markAll">Mark All</button>
+                <button class="clearAllMarks">Clear All Marks</button> -->
                 <textarea id="input" class="w-full h-96 border">
                     <section class="relative padding:--section px-doc">
                         <subsection class="max-w--doc mx-auto flex flex-col items-start gap-section50">
@@ -44,15 +49,17 @@
                 </textarea>
             </div>
 
+            <div class="process-pane" style="height:20vh;overflow:auto;">
+                <!-- output -->
+                <div class="border-4x border-blue-400x">
+                    <textarea id="processed" class="w-full h-96 border">
+                    </textarea>
+                </div>
+            </div>
+
 
         </div>
-        <div class="process-pane">
-            <!-- output -->
-            <div class="border-4x border-blue-400x">
-                <textarea id="processed" class="w-full h-96 border">
-                </textarea>
-            </div>
-        </div>
+
 
     </div>
 
@@ -61,12 +68,24 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/xml/xml.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/javascript/javascript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/css/css.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"
+        integrity="sha512-Q2qfEJEU257Qlqc4/5g6iKuJNnn5L0xu2D48p8WHe9YC/kLj2UfkdGD01qfxWk+XIcHsZngcA8WuKcizF8MAHA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.js"
+        integrity="sha512-TRBGROluEM9UrFPnoCk0vW2PqqcMUyGJETe60qzktKTEiXmPhmxqJLYqOf7TsX4ulMbANjdpLY+DYk0aoht4gA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/xml-fold.min.js"
+        integrity="sha512-3/N6i9E1fOr1I/8Yt3KL9uFeoEcjh3ceFXf83X6vIlElMZEq0LKF1JDYsIJYaZIJeG2YD9TnGCA4KAR2bEbz/w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.62.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify-css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.11/beautify-html.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/aviator.js"></script>
+    <script src="js/emmet.js"></script>
 
     <script src="js/process3.js"></script>
     <script src="js/classOrder.js"></script>

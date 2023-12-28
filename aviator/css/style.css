@@ -2,7 +2,7 @@
   font-family: "MonoLisa", monospace;
   font-size: 0.8rem;
   padding: 1rem 0;
-  height: auto;
+  height: 100%;
 }
 
 .mark {
@@ -11,4 +11,12 @@
 
 .emmet-abbreviation-preview {
   display: none !important;
+}
+
+.bc > * {
+  border: 1px solid !important;
+}
+
+.bd * {
+  border: 1px solid !important;
 }

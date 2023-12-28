@@ -8,6 +8,8 @@ const SIZE_MODIFIERS = {
 const PROPERTY_MAPPING = {
     "bg": "background",
     "color": "color",
+    //display
+    "d": "display",
     // Add more mappings here as needed
 };
 
