@@ -29,7 +29,7 @@
                     lineWrapping: true,
                     foldGutter: true,
                     foldOptions: {
-                        minFoldSize: 1
+                        minFoldSize: 0
                     },
                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
                     extraKeys: {
@@ -242,14 +242,20 @@
                     }
 
                     longPressTimeout = setTimeout(() => {
-                        // Get the position of the mouse event in the CodeMirror document
-                        var position = codeMirrorInstance.coordsChar({
-                            left: event.pageX,
-                            top: event.pageY
-                        });
+                        // Check if a selection is present
+                        if (codeMirrorInstance.somethingSelected()) {
+                            // If a selection is present, fold all strings in the selection
+                            self.foldAllStringsInSelection(codeMirrorInstance);
+                        } else {
+                            // If no selection is present, get the position of the mouse event in the CodeMirror document
+                            var position = codeMirrorInstance.coordsChar({
+                                left: event.pageX,
+                                top: event.pageY
+                            });
 
-                        // Call the new method on a successful long press
-                        self.selectTokenAtPosition(codeMirrorInstance, position);
+                            // Call the new method on a successful long press
+                            self.selectTokenAtPosition(codeMirrorInstance, position);
+                        }
                     }, 250); // 250 ms = 1/4 second
 
                     // Clear the timeout if the mouse is released before the long press duration
@@ -271,10 +277,10 @@
                 codeMirrorInstance.setSelection(startPosition, endPosition);
 
                 // Shift the selection to the next token
-                this.shiftSelectionToClassToken(codeMirrorInstance);
+                this.shiftSelectionToClassTokenandFold(codeMirrorInstance);
             },
 
-            shiftSelectionToClassToken: function (codeMirrorInstance) {
+            shiftSelectionToClassTokenandFold: function (codeMirrorInstance) {
                 // Get the current selection
                 var selection = codeMirrorInstance.getSelection();
 
@@ -295,7 +301,55 @@
                 // Log the start and end positions of the final selection
                 console.log('Start position:', startPosition);
                 console.log('End position:', endPosition);
+
+                // Call toggleFoldForRange with the line and character positions of the start and end of the selection
+                this.toggleFoldForRange(startPosition.line, startPosition.ch, endPosition.line, endPosition.ch);
             },
+
+            foldSpecificRange: function (fromLine, fromCh, toLine, toCh) {
+                var from = CodeMirror.Pos(fromLine, fromCh); // start position
+                var to = CodeMirror.Pos(toLine, toCh); // end position
+
+                // Use the existing foldCode function, but with a custom range
+                this.editors.input.foldCode(from, {
+                    rangeFinder: function (cm, pos) {
+                        // Return the specific range to fold
+                        return { from: from, to: to };
+                    }
+                }, "fold");
+            },
+
+            toggleFoldForRange: function (fromLine, fromCh, toLine, toCh) {
+                this.foldSpecificRange(fromLine, fromCh, toLine, toCh);
+            },
+
+            foldAllStringsInSelection: function (codeMirrorInstance) {
+                // Get the start and end positions of the selection
+                var from = codeMirrorInstance.getCursor('from');
+                var to = codeMirrorInstance.getCursor('to');
+
+                // Iterate over each line in the selection
+                for (var line = from.line; line <= to.line; line++) {
+                    // Get the start and end characters for this line
+                    var startCh = line === from.line ? from.ch : 0;
+                    var endCh = line === to.line ? to.ch : null;
+
+                    // Get the tokens for this line
+                    var tokens = codeMirrorInstance.getLineTokens(line);
+
+                    // Iterate over each token in the line
+                    for (var i = 0; i < tokens.length; i++) {
+                        var token = tokens[i];
+
+                        // Check if the token is a string and is within the selection
+                        if (token.type === 'string' && token.start >= startCh && (endCh === null || token.end <= endCh)) {
+                            // Fold the string
+                            this.foldSpecificRange(line, token.start, line, token.end);
+                        }
+                    }
+                }
+            },
+
 
 
 

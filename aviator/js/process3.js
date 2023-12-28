@@ -15,7 +15,7 @@
         'grid-cols': 'grid-template-columns',
         'd': 'display',
         //flex direction
-        'dir': 'flex-direction',
+        'direction': 'flex-direction',
         'fd': 'flex-direction',
         'jc': 'justify-content',
         'ai': 'align-items',
