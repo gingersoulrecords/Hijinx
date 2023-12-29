@@ -1,3 +1,6 @@
+//notes
+
+//when folding classes, make the class attribute a toggle.
 
 
 
@@ -155,6 +158,11 @@
 
             // Set up mouseover event handler for the .CodeMirror-line elements
             $('pre.CodeMirror-line').on('mouseover', function (event) {
+                // Check if the command key is pressed
+                if (!event.metaKey && !event.ctrlKey) {
+                    return;
+                }
+
                 var targetElement = $(this).find('.cm-tag:not(.cm-bracket)').first();
                 var tag = targetElement.text();
 
@@ -329,6 +337,42 @@
         },
 
         // ====================
+        // ELEMENT FOLDING
+        // ====================
+
+        handleLongPressOnTag: function (codeMirrorInstance) {
+            var self = this; // Store a reference to this
+            var longPressTimeout;
+
+            // Get the actual CodeMirror element
+            var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
+            var codeMirrorCodeElement = codeMirrorElement.find('.CodeMirror-code');
+
+            // Set up mousedown event handler
+            codeMirrorCodeElement.on('mousedown', '.cm-tag', function (event) {
+                longPressTimeout = setTimeout(function () {
+                    var selection = codeMirrorInstance.getSelection();
+                    if (selection) {
+                        var fromLine = codeMirrorInstance.getCursor('start').line;
+                        var toLine = codeMirrorInstance.getCursor('end').line;
+                        for (var i = fromLine; i <= toLine; i++) {
+                            codeMirrorInstance.foldCode(CodeMirror.Pos(i, 0));
+                        }
+                    } else {
+                        var cursorLine = codeMirrorInstance.getCursor().line;
+                        codeMirrorInstance.foldCode(CodeMirror.Pos(cursorLine, 0));
+                    }
+                }, 300);
+            });
+
+            // Set up mouseup event handler
+            codeMirrorCodeElement.on('mouseup', function () {
+                clearTimeout(longPressTimeout);
+            });
+        },
+
+
+        // ====================
         // CLASS FOLDING
         // ====================
 
@@ -482,6 +526,7 @@
             this.processCSSInput();
 
             this.handleLongPressOnClassAttribute(this.editors.input);
+            this.handleLongPressOnTag(this.editors.input);
             this.addMouseEnterHandler(this.editors.input);
 
             this.buildTagIndex(this.editors.input);
