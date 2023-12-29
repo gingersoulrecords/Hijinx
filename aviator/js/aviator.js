@@ -109,19 +109,6 @@
             }
         },
 
-        destroyCodeMirrors: function () {
-            // Iterate over all the editors
-            for (var editorKey in this.editors) {
-                if (this.editors.hasOwnProperty(editorKey)) {
-                    // Call toTextArea on each editor to revert it back to a textarea
-                    this.editors[editorKey].toTextArea();
-                }
-            }
-
-            // Clear the editors object
-            this.editors = {};
-        },
-
 
         // ====================
         // INSPECTING
