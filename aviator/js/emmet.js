@@ -5974,7 +5974,6 @@
         }
     };
 
-    console.log(syntaxConfig);
 
     /**
      * Parses raw snippets definitions with possibly multiple keys into a plan

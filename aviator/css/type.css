@@ -1,0 +1,407 @@
+/* FONT SIZE */
+
+:root {
+  /* FONT SIZE */
+  --fontSizeTinier: calc(var(--fontSizeTiny) / var(--fontSizeScale));
+  --fontSizeTiny: calc(var(--fontSize) / var(--fontSizeScale));
+  --fontSize0: var(--fontSize);
+  --fontSize1: calc(var(--fontSize) * var(--fontSizeScale));
+  --fontSize2: calc(var(--fontSize1) * var(--fontSizeScale));
+  --fontSize3: calc(var(--fontSize2) * var(--fontSizeScale));
+  --fontSize4: calc(var(--fontSize3) * var(--fontSizeScale));
+  --fontSize5: calc(var(--fontSize4) * var(--fontSizeScale));
+  --fontSize6: calc(var(--fontSize5) * var(--fontSizeScale));
+  --fontSize7: calc(var(--fontSize6) * var(--fontSizeScale));
+  --fontSize8: calc(var(--fontSize7) * var(--fontSizeScale));
+  --fontSize9: calc(var(--fontSize8) * var(--fontSizeScale));
+  --fontSize10: calc(var(--fontSize9) * var(--fontSizeScale));
+  --fontSize11: calc(var(--fontSize10) * var(--fontSizeScale));
+  --fontSize12: calc(var(--fontSize11) * var(--fontSizeScale));
+  --fontSize13: calc(var(--fontSize12) * var(--fontSizeScale));
+  --fontSize14: calc(var(--fontSize13) * var(--fontSizeScale));
+  --fontSize15: calc(var(--fontSize14) * var(--fontSizeScale));
+  --fontSize16: calc(var(--fontSize15) * var(--fontSizeScale));
+  --fontSize17: calc(var(--fontSize16) * var(--fontSizeScale));
+  --fontSize18: calc(var(--fontSize17) * var(--fontSizeScale));
+
+  /* LINE HEIGHT */
+  --lineHeightTinier: var(--lineHeight);
+  --lineHeightTiny: var(--lineHeight);
+  --lineHeight0: var(--lineHeight);
+  --lineHeight1: var(--lineHeight0);
+  --lineHeight2: var(--lineHeight1);
+  --lineHeight3: calc(var(--lineHeight2) / (var(--lineHeightScale)));
+  --lineHeight4: var(--lineHeight3);
+  --lineHeight5: calc(
+    var(--lineHeight4) / (var(--lineHeightScale) * var(--lineHeightScale))
+  );
+  --lineHeight6: calc(var(--lineHeight5) / var(--lineHeightScale));
+  --lineHeight7: var(--lineHeight6);
+  --lineHeight8: calc(var(--lineHeight7) / var(--lineHeightScale));
+  --lineHeight9: var(--lineHeight8);
+  --lineHeight10: var(--lineHeight9);
+  --lineHeight11: calc(
+    var(--lineHeight10) / (var(--lineHeightScale) * var(--lineHeightScale))
+  );
+  --lineHeight12: var(--lineHeight11);
+  --lineHeight13: var(--lineHeight12);
+  --lineHeight14: var(--lineHeight13);
+  --lineHeight15: var(--lineHeight14);
+  --lineHeight16: var(--lineHeight15);
+  --lineHeight17: var(--lineHeight16);
+  --lineHeight18: var(--lineHeight17);
+
+  /* MAX WIDTH */
+  --maxWidthTypeTiny: calc(var(--maxWidthTypeBase) / var(--maxWidthTypeScale));
+  --maxWidthType0: calc(var(--maxWidthTypeBase));
+  --maxWidthType1: calc(var(--maxWidthType0) * var(--maxWidthTypeScale));
+  --maxWidthType2: calc(var(--maxWidthType1) * var(--maxWidthTypeScale));
+  --maxWidthType3: calc(var(--maxWidthType2) * var(--maxWidthTypeScale));
+  --maxWidthType4: calc(var(--maxWidthType3) * var(--maxWidthTypeScale));
+  --maxWidthType5: calc(var(--maxWidthType4) * var(--maxWidthTypeScale));
+  --maxWidthType6: calc(var(--maxWidthType5) * var(--maxWidthTypeScale));
+  --maxWidthType7: calc(var(--maxWidthType6) * var(--maxWidthTypeScale));
+  --maxWidthType8: calc(var(--maxWidthType7) * var(--maxWidthTypeScale));
+  --maxWidthType9: calc(var(--maxWidthType8) * var(--maxWidthTypeScale));
+  --maxWidthType10: calc(var(--maxWidthType9) * var(--maxWidthTypeScale));
+  --maxWidthType11: calc(var(--maxWidthType10) * var(--maxWidthTypeScale));
+  --maxWidthType12: calc(var(--maxWidthType11) * var(--maxWidthTypeScale));
+  --maxWidthType13: calc(var(--maxWidthType12) * var(--maxWidthTypeScale));
+  --maxWidthType14: calc(var(--maxWidthType13) * var(--maxWidthTypeScale));
+  --maxWidthType15: calc(var(--maxWidthType14) * var(--maxWidthTypeScale));
+  --maxWidthType16: calc(var(--maxWidthType15) * var(--maxWidthTypeScale));
+  --maxWidthType17: calc(var(--maxWidthType16) * var(--maxWidthTypeScale));
+  --maxWidthType18: calc(var(--maxWidthType17) * var(--maxWidthTypeScale));
+
+  /* SYSTEM */
+  --fontSize: 13px;
+  --fontSizeScale: 1.075;
+
+  --lineHeight: 1.7;
+  --lineHeightScale: 1.055;
+
+  --maxWidthTypeBase: 40em;
+  --maxWidthTypeScale: 0.91;
+
+  --marginBottomHeading: 0.4em;
+  --marginBottomReadable: 1.2em;
+
+  --fontWeightHeading: 600;
+  --letterSpacingHeading: -0.015em;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --fontSize: 13.5px;
+    --fontSizeScale: 1.1;
+
+    --lineHeight: 1.6;
+    --lineHeightScale: 1.055;
+
+    --gapBanner: var(--spacing-2xl);
+    --gapMultiple: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --fontSize: 16px;
+    --fontSizeScale: 1.1;
+
+    --lineHeight: 1.6;
+    --lineHeightScale: 1.055;
+  }
+}
+
+@media (min-width: 1366px) {
+  :root {
+    --fontSize: 18px;
+    --fontSizeScale: 1.125;
+
+    --lineHeight: 1.6;
+    --lineHeightScale: 1.055;
+  }
+}
+
+/* UTILITIES */
+
+[class*="type\:"][class*="-heading"] {
+  margin-bottom: clamp(0.5rem, var(--marginBottomHeading), 1.5rem);
+  letter-spacing: var(--letterSpacingHeading);
+}
+
+[class*="type\:"][class*="-heading"] {
+  margin-bottom: var(--marginBottomHeading);
+  /* font-family: var(--fontFamilyHeading); */
+}
+
+[class*="type\:"][class*="-readable"] {
+  margin-bottom: var(--marginBottomReadable);
+  font-weight: var(--fontWeightReadable);
+}
+
+[class*="type\:big-heading"],
+[class*="type\:bigger-heading"],
+[class*="type\:biggest-heading"],
+[class*="type\:large-heading"],
+[class*="type\:larger-heading"],
+[class*="type\:largest-heading"],
+[class*="type\:3xl-heading"],
+[class*="type\:4xl-heading"],
+[class*="type\:5xl-heading"],
+[class*="type\:6xl-heading"],
+[class*="type\:7xl-heading"],
+[class*="type\:8xl-heading"],
+[class*="type\:9xl-heading"],
+[class*="type\:10xl-heading"],
+[class*="type\:11xl-heading"],
+[class*="type\:12xl-heading"],
+[class*="type\:13xl-heading"],
+[class*="type\:14xl-heading"],
+[class*="type\:15xl-heading"] {
+  font-weight: var(--fontWeightHeading);
+}
+
+/* UTILITIES */
+
+/* main class but also handles variants (heading, readable, eyebrow) */
+[class*="type\:3xs"] {
+  font-size: var(--fontSizeTinier);
+  line-height: var(--lineHeightTinier);
+}
+
+.type\:3xs-heading,
+.type\:3xs-readable {
+  max-width: var(--maxWidthTypeTinier);
+}
+
+[class*="type\:2xs"] {
+  font-size: var(--fontSizeTiny);
+  line-height: var(--lineHeightTiny);
+}
+
+.type\:2xs-heading,
+.type\:2xs-readable {
+  max-width: var(--maxWidthTypeTiny);
+}
+
+[class*="type\:xs"] {
+  font-size: var(--fontSize0);
+  line-height: var(--lineHeight0);
+}
+
+.type\:xs-heading,
+.type\:xs-readable {
+  max-width: var(--maxWidthType0);
+}
+
+[class*="type\:sm"] {
+  font-size: var(--fontSize1);
+  line-height: var(--lineHeight1);
+}
+
+.type\:sm-heading,
+.type\:sm-readable {
+  max-width: var(--maxWidthType1);
+}
+
+[class*="type\:md"] {
+  font-size: var(--fontSize2);
+  line-height: var(--lineHeight2);
+}
+
+.type\:md-heading,
+.type\:md-readable {
+  max-width: var(--maxWidthType2);
+}
+
+[class*="type\:lg"] {
+  font-size: var(--fontSize3);
+  line-height: var(--lineHeight3);
+}
+
+.type\:lg-heading,
+.type\:lg-readable {
+  max-width: var(--maxWidthType3);
+}
+
+[class*="type\:xl"] {
+  font-size: var(--fontSize4);
+  line-height: var(--lineHeight4);
+}
+
+.type\:xl-heading,
+.type\:xl-readable {
+  max-width: var(--maxWidthType4);
+}
+
+[class*="type\:2xl"] {
+  font-size: var(--fontSize5);
+  line-height: var(--lineHeight5);
+}
+
+.type\:2xl-heading,
+.type\:2xl-readable {
+  max-width: var(--maxWidthType5);
+}
+
+[class*="type\:3xl"] {
+  font-size: var(--fontSize6);
+  line-height: var(--lineHeight6);
+}
+
+.type\:3xl-heading,
+.type\:3xl-readable {
+  max-width: var(--maxWidthType6);
+}
+
+[class*="type\:4xl"] {
+  font-size: var(--fontSize7);
+  line-height: var(--lineHeight7);
+}
+
+.type\:4xl-heading,
+.type\:4xl-readable {
+  max-width: var(--maxWidthType7);
+}
+
+/* Continue the pattern up to 18xl */
+[class*="type\:5xl"] {
+  font-size: var(--fontSize8);
+  line-height: var(--lineHeight8);
+}
+
+.type\:5xl-heading,
+.type\:5xl-readable {
+  max-width: var(--maxWidthType8);
+}
+
+[class*="type\:6xl"] {
+  font-size: var(--fontSize9);
+  line-height: var(--lineHeight9);
+}
+
+.type\:6xl-heading,
+.type\:6xl-readable {
+  max-width: var(--maxWidthType9);
+}
+
+[class*="type\:7xl"] {
+  font-size: var(--fontSize10);
+  line-height: var(--lineHeight10);
+}
+
+.type\:7xl-heading,
+.type\:7xl-readable {
+  max-width: var(--maxWidthType10);
+}
+
+[class*="type\:8xl"] {
+  font-size: var(--fontSize11);
+  line-height: var(--lineHeight11);
+}
+
+.type\:8xl-heading,
+.type\:8xl-readable {
+  max-width: var(--maxWidthType11);
+}
+
+[class*="type\:9xl"] {
+  font-size: var(--fontSize12);
+  line-height: var(--lineHeight12);
+}
+
+.type\:9xl-heading,
+.type\:9xl-readable {
+  max-width: var(--maxWidthType12);
+}
+
+[class*="type\:10xl"] {
+  font-size: var(--fontSize13);
+  line-height: var(--lineHeight13);
+}
+
+.type\:10xl-heading,
+.type\:10xl-readable {
+  max-width: var(--maxWidthType13);
+}
+
+[class*="type\:11xl"] {
+  font-size: var(--fontSize14);
+  line-height: var(--lineHeight14);
+}
+
+.type\:11xl-heading,
+.type\:11xl-readable {
+  max-width: var(--maxWidthType14);
+}
+
+[class*="type\:12xl"] {
+  font-size: var(--fontSize15);
+  line-height: var(--lineHeight15);
+}
+
+.type\:12xl-heading,
+.type\:12xl-readable {
+  max-width: var(--maxWidthType15);
+}
+
+[class*="type\:13xl"] {
+  font-size: var(--fontSize16);
+  line-height: var(--lineHeight16);
+}
+
+.type\:13xl-heading,
+.type\:13xl-readable {
+  max-width: var(--maxWidthType16);
+}
+
+[class*="type\:14xl"] {
+  font-size: var(--fontSize17);
+  line-height: var(--lineHeight17);
+}
+
+.type\:14xl-heading,
+.type\:14xl-readable {
+  max-width: var(--maxWidthType17);
+}
+
+[class*="type\:15xl"] {
+  font-size: var(--fontSize18);
+  line-height: var(--lineHeight18);
+}
+
+.type\:15xl-heading,
+.type\:15xl-readable {
+  max-width: var(--maxWidthType18);
+}
+
+[class*="type\:16xl"] {
+  font-size: var(--fontSize19);
+  line-height: var(--lineHeight19);
+}
+
+.type\:16xl-heading,
+.type\:16xl-readable {
+  max-width: var(--maxWidthType19);
+}
+
+[class*="type\:17xl"] {
+  font-size: var(--fontSize20);
+  line-height: var(--lineHeight20);
+}
+
+.type\:17xl-heading,
+.type\:17xl-readable {
+  max-width: var(--maxWidthType20);
+}
+
+[class*="type\:18xl"] {
+  font-size: var(--fontSize21);
+  line-height: var(--lineHeight21);
+}
+
+.type\:18xl-heading,
+.type\:18xl-readable {
+  max-width: var(--maxWidthType21);
+}

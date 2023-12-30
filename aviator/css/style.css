@@ -20,3 +20,13 @@
 .bd * {
   border: 1px solid !important;
 }
+
+.dashboard {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .dashboard {
+    display: flex;
+  }
+}

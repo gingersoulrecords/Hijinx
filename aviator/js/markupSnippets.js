@@ -1,6 +1,19 @@
 window.markupSnippets = {
     "overlay": "overlay.position:absolute.inset:0.bg:blue",
 
+
+    "hero": "section[class='padding-y:calc(--section*2)'].rr.padding-x:--pxDoc.color:--p-400.bg:--p-900>subsection.display:flex.direction:column.align-items:center.max-width:--maxWidthDoc.margin-x:auto.text-align:center>item.display:flex.direction:column.align-items:center>(p.color:--p-50.type:8xl-heading{Lorem ipsum dolor sit amet consectetur adipisicing.}+p.type:md-readable{Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque atque quasi iste quod possimus! Eligendi qui eaque voluptatum ullam nihil.}+button[class='padding-y:.5rem'].padding-x:1rem.bg:--p-400.color:--p-50.border-radius:--borderRadiusDoc{Get started})",
+
+
+    //Section
+
+    //Subsection
+
+    //Item
+
+    //Core
+
+
     "a": "a[href]",
     "a:blank": "a[href='http://${0}' target='_blank' rel='noopener noreferrer']",
     "a:link": "a[href='http://${0}']",

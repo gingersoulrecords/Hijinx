@@ -6,6 +6,23 @@
 
 (function ($) {
 
+
+    //use split js to split the panes
+    Split(['#csspane', '#inputpane', '#processpane'], {
+        sizes: [45, 45, 10],
+        gutterSize: 20,
+        cursor: 'grabbing',
+        direction: 'vertical',
+    });
+
+    Split(['.blank-pane', '.inputs-pane'], {
+        sizes: [67, 33],
+        gutterSize: 20,
+        cursor: 'grabbing',
+        direction: 'horizontal',
+    });
+
+
     // Ensure that the window.markupSnippets object exists
     if (window.markupSnippets) {
         // Add or update the 'foo' entry with the desired value
@@ -26,6 +43,43 @@
             css: null,
             input: null,
             processed: null
+        },
+
+        // Define the custom "Aviator" mode that tokenizes brackets and parentheses.
+        aviatorOverlay: {
+            token: function (stream) {
+                var ch = stream.peek();
+
+                // Tokenize curly braces
+                if (ch === "{" || ch === "}") {
+                    stream.next();
+                    return "brace";
+                }
+
+                // Tokenize square braces
+                if (ch === "[" || ch === "]") {
+                    stream.next();
+                    return "brace";
+                }
+
+                // Tokenize parentheses
+                if (ch === "(" || ch === ")") {
+                    stream.next();
+                    return "parenthesis";
+                }
+
+                // Tokenize colons
+                if (ch === ":") {
+                    stream.next();
+                    return "colon";
+                }
+
+                // Move the stream position if none of the above tokens match
+                while (stream.next() != null &&
+                    !["{", "}", "[", "]", "(", ":", ")"].includes(stream.peek())) { }
+
+                return null;
+            }
         },
 
         debounce: function (func, wait) {
@@ -63,10 +117,107 @@
                         } else {
                             cm.execCommand('insertSoftTab');
                         }
-                    }
+                    },
+                    "Cmd-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 100, 'up');
+                    },
+                    "Ctrl-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 100, 'up');
+                    },
+                    "Cmd-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 100, 'down');
+                    },
+                    "Ctrl-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 100, 'down');
+                    },
+                    "Option-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.1, 'up');
+                    },
+                    "Alt-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.1, 'up');
+                    },
+                    "Shift-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 10, 'up');
+                    },
+                    "Shift-Option-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.01, 'up');
+                    },
+                    "Shift-Alt-Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.01, 'up');
+                    },
+                    "Up": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 1, 'up');
+                    },
+                    "Option-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.1, 'down');
+                    },
+                    "Alt-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.1, 'down');
+                    },
+                    "Shift-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 10, 'down');
+                    },
+                    "Shift-Option-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.01, 'down');
+                    },
+                    "Shift-Alt-Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 0.01, 'down');
+                    },
+                    "Down": function (cm) {
+                        return aviator.adjustSelectedNumber(cm, 1, 'down');
+                    },
+                    "Shift-Ctrl-/": "emmetToggleComment",
+                    "Shift-Cmd-/": "emmetToggleComment",
+
+                    'Ctrl-/': function (cm) {
+                        cm.execCommand('toggleComment');
+                    },
+
+                    'Cmd-/': function (cm) {
+                        cm.execCommand('toggleComment');
+                    },
                 },
                 viewportMargin: Infinity,
+
+
             };
+        },
+
+        adjustSelectedNumber: function (mirror, increment, direction) {
+            let range = mirror.listSelections()[0];  // get the first range object of the selection
+
+            // Check if selection spans more than one line
+            if (range.anchor.line !== range.head.line) {
+                return CodeMirror.Pass;
+            }
+
+            let sel = mirror.getSelection();
+            let match = sel.match(/(.*?)(-?\d*\.?\d+)(.*)/);  // revised regex to correctly identify floating point numbers
+
+            if (!match) return CodeMirror.Pass;
+
+            let beforeNumber = match[1];
+            let number = parseFloat(match[2]);
+            let afterNumber = match[3];
+
+            let adjustedNumber;
+            if (direction === 'up') {
+                adjustedNumber = number + Math.abs(increment);
+            } else { // direction is 'down'
+                adjustedNumber = number - Math.abs(increment);
+                // when original number is zero and direction is down, make it negative
+                if (number === 0) adjustedNumber = -Math.abs(increment);
+            }
+
+            // Remove unnecessary trailing zeros
+            adjustedNumber = parseFloat(adjustedNumber.toFixed(2));
+
+            let replacement = beforeNumber + adjustedNumber + afterNumber;
+
+            // replace selection and keep the new text selected
+            mirror.replaceSelection(replacement, "around");
+
+            return true;
         },
 
         // This method initializes a CodeMirror instance on the textarea with the given ID
@@ -140,7 +291,26 @@
             }.bind(this));
 
             // Log the cmTagElements object to the console
-            console.log(this.cmTagElements);
+            //console.log(this.cmTagElements);
+        },
+
+        addRightClickHandler: function (codeMirrorInstance) {
+            // Get the actual CodeMirror element
+            var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
+            var codeMirrorCodeElement = codeMirrorElement.find('.CodeMirror-code');
+
+            // Set up right-click event handler for the .cm-attribute elements
+            codeMirrorCodeElement.on('contextmenu', '.cm-attribute', function (event) {
+                // Prevent the default context menu from showing up
+                event.preventDefault();
+
+                // Check if the text of the element is 'class'
+                if ($(this).text() === 'class') {
+                    // Alert a message
+                    alert('You right-clicked on a .cm-attribute with the text of "class"');
+
+                }
+            });
         },
 
         addMouseEnterHandler: function (codeMirrorInstance) {
@@ -215,9 +385,18 @@
         },
 
         // This method beautifies the content of all editors
+        // beautifyAllEditors: function () {
+        //     for (var key in this.editors) {
+        //         this.beautifyEditorContent(this.editors[key]);
+        //     }
+        // },
+
         beautifyAllEditors: function () {
+            var editorsToBeautify = ['css', 'input'];
             for (var key in this.editors) {
-                this.beautifyEditorContent(this.editors[key]);
+                if (editorsToBeautify.includes(key)) {
+                    this.beautifyEditorContent(this.editors[key]);
+                }
             }
         },
 
@@ -390,6 +569,11 @@
 
             // Set up mousedown event handler
             codeMirrorCodeElement.on('mousedown', '.cm-attribute', function (event) {
+                // Exclude right clicks
+                if (event.button === 2) {
+                    return;
+                }
+
                 var targetElement = $(event.target);
                 if (targetElement.text() !== 'class') {
                     return;
@@ -528,7 +712,7 @@
             this.handleLongPressOnClassAttribute(this.editors.input);
             this.handleLongPressOnTag(this.editors.input);
             this.addMouseEnterHandler(this.editors.input);
-
+            this.addRightClickHandler(this.editors.input);
             this.buildTagIndex(this.editors.input);
 
 
