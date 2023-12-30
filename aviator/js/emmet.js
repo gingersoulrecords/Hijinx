@@ -9438,6 +9438,7 @@
     function balanceAction(editor, inward) {
         const syntax = docSyntax(editor);
         if (isHTML(syntax) || isCSS(syntax)) {
+            //alert(99);
             const ranges = inward ?
                 balanceActionInward(editor, syntax) :
                 balanceActionOutward(editor, syntax);

@@ -156,9 +156,14 @@
             value = value.slice(0, -1) + ' !important';
         }
 
-        // If the value ends with ';', remove the semicolon
+        // If the value ends with ';', remove the semicolon from the declaration
         if (value.endsWith(';')) {
             value = value.slice(0, -1);
+        }
+
+        // If the value contains an asterisk and does not contain 'calc', wrap the entire value in a calc() function
+        if (value.includes('*') && !value.includes('calc')) {
+            value = 'calc(' + value.replace('*', ' * ') + ')';
         }
 
         // Set soulClassObject.valuesString to value

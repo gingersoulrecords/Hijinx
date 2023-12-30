@@ -118,6 +118,12 @@
                             cm.execCommand('insertSoftTab');
                         }
                     },
+                    "Cmd-E": function (cm) {
+                        cm.execCommand('emmetBalance');
+                    },
+                    "Shift-Cmd-E": function (cm) {
+                        cm.execCommand('emmetBalanceInward');
+                    },
                     "Cmd-Up": function (cm) {
                         return aviator.adjustSelectedNumber(cm, 100, 'up');
                     },
@@ -374,9 +380,27 @@
         beautifyEditorContent: function (editor) {
             var mode = editor.getOption('mode');
             var content = editor.getValue().trim();
-
             if (mode === 'text/html') {
-                content = html_beautify(content);
+                var htmlConfig = {
+                    "indent_size": "1",
+                    "indent_char": "\t",
+                    "max_preserve_newlines": "2",
+                    "preserve_newlines": true,
+                    "keep_array_indentation": false,
+                    "break_chained_methods": false,
+                    "indent_scripts": "normal",
+                    "brace_style": "collapse",
+                    "space_before_conditional": true,
+                    "unescape_strings": false,
+                    "jslint_happy": false,
+                    "end_with_newline": false,
+                    "wrap_line_length": "0",
+                    "indent_inner_html": false,
+                    "comma_first": false,
+                    "e4x": false,
+                    "indent_empty_lines": false
+                };
+                content = html_beautify(content, htmlConfig);
             } else if (mode === 'css') {
                 content = css_beautify(content);
             }
