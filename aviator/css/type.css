@@ -125,6 +125,11 @@
 
 /* UTILITIES */
 
+html,
+body {
+  font-family: var(--fontFamilyReadable);
+}
+
 [class*="type\:"][class*="-heading"] {
   margin-bottom: clamp(0.5rem, var(--marginBottomHeading), 1.5rem);
   letter-spacing: var(--letterSpacingHeading);
@@ -132,34 +137,13 @@
 
 [class*="type\:"][class*="-heading"] {
   margin-bottom: var(--marginBottomHeading);
-  /* font-family: var(--fontFamilyHeading); */
+  font-family: var(--fontFamilyHeading);
+  font-weight: var(--fontWeightHeading);
 }
 
 [class*="type\:"][class*="-readable"] {
   margin-bottom: var(--marginBottomReadable);
   font-weight: var(--fontWeightReadable);
-}
-
-[class*="type\:big-heading"],
-[class*="type\:bigger-heading"],
-[class*="type\:biggest-heading"],
-[class*="type\:large-heading"],
-[class*="type\:larger-heading"],
-[class*="type\:largest-heading"],
-[class*="type\:3xl-heading"],
-[class*="type\:4xl-heading"],
-[class*="type\:5xl-heading"],
-[class*="type\:6xl-heading"],
-[class*="type\:7xl-heading"],
-[class*="type\:8xl-heading"],
-[class*="type\:9xl-heading"],
-[class*="type\:10xl-heading"],
-[class*="type\:11xl-heading"],
-[class*="type\:12xl-heading"],
-[class*="type\:13xl-heading"],
-[class*="type\:14xl-heading"],
-[class*="type\:15xl-heading"] {
-  font-weight: var(--fontWeightHeading);
 }
 
 /* UTILITIES */

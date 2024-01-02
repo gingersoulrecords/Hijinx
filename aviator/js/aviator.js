@@ -1,6 +1,9 @@
 //notes
 
 //when folding classes, make the class attribute a toggle.
+//require a keypress, like command or shift, when folding
+
+
 
 
 
@@ -45,39 +48,24 @@
             processed: null
         },
 
-        // Define the custom "Aviator" mode that tokenizes brackets and parentheses.
         aviatorOverlay: {
             token: function (stream) {
-                var ch = stream.peek();
-
-                // Tokenize curly braces
-                if (ch === "{" || ch === "}") {
-                    stream.next();
-                    return "brace";
+                // Tokenize the property part of each class in the string, including the colon
+                if (stream.match(/^[a-z\-]+:/)) {
+                    return "av-property";
                 }
 
-                // Tokenize square braces
-                if (ch === "[" || ch === "]") {
-                    stream.next();
-                    return "brace";
+                // Tokenize the value part of each class after the colon
+                // Include all alphanumeric characters, asterisks, and hyphens
+                if (stream.match(/^[\w\-*(),.]+/)) {
+                    return "av-value";
                 }
 
-                // Tokenize parentheses
-                if (ch === "(" || ch === ")") {
-                    stream.next();
-                    return "parenthesis";
-                }
+                // Ignore spaces and move to the next token
+                if (stream.eatSpace()) return null;
 
-                // Tokenize colons
-                if (ch === ":") {
-                    stream.next();
-                    return "colon";
-                }
-
-                // Move the stream position if none of the above tokens match
-                while (stream.next() != null &&
-                    !["{", "}", "[", "]", "(", ":", ")"].includes(stream.peek())) { }
-
+                // If no property, value or space is found, move the stream position forward
+                stream.next();
                 return null;
             }
         },
@@ -99,6 +87,7 @@
                 lineNumbers: true,
                 mode: mode,
                 theme: "material-palenight",
+                //theme: "duotone-dark",
                 lineWrapping: true,
                 foldGutter: true,
                 foldOptions: {
@@ -182,6 +171,10 @@
                     'Cmd-/': function (cm) {
                         cm.execCommand('toggleComment');
                     },
+                    'Esc': function (cm) {
+                        cm.execCommand('clearSearch');
+                    }
+
                 },
                 viewportMargin: Infinity,
 
@@ -241,31 +234,34 @@
             // If this is the input editor, add a change event listener that calls processHTMLInput
             if (editorKey === 'input') {
                 var self = this; // Store a reference to the aviator object
+
+                // Set up a debounced changes event handler
                 var debouncedChanges = self.debounce(function () {
                     self.processHTMLInput();
-                    self.buildTagIndex(editor);
-                    self.addMouseEnterHandler(editor);
                 }, 100); // Debounce time in milliseconds
 
                 editor.on('changes', debouncedChanges);
 
                 var debouncedUpdate = self.debounce(function () {
                     self.processHTMLInput();
-                    self.buildTagIndex(editor);
-                    self.addMouseEnterHandler(editor);
                 }, 400); // Debounce time in milliseconds
 
                 editor.on('update', debouncedUpdate);
 
+                editor.addOverlay(self.aviatorOverlay);
 
             }
 
             // If this is the css editor, add a change event listener that calls processCSSInput
             if (editorKey === 'css') {
                 var self = this; // Store a reference to the aviator object
-                editor.on('changes', function () {
+
+                // Set up a debounced changes event handler
+                var debouncedCSSChanges = self.debounce(function () {
                     self.processCSSInput();
-                });
+                }, 400); // Debounce time in milliseconds
+
+                editor.on('changes', debouncedCSSChanges);
             }
         },
 
@@ -274,31 +270,6 @@
         // INSPECTING
         // ====================
 
-
-        buildTagIndex: function (codeMirrorInstance) {
-            // Initialize an object to store the .cm-tag elements
-            this.cmTagElements = {};
-
-            // Get the root element of the editor
-            var rootElement = codeMirrorInstance.getWrapperElement();
-
-            // Get all the .cm-tag elements within the root element and store them in the object
-            $(rootElement).find('.cm-tag').each(function (index, element) {
-                var tagElement = $(element);
-
-                // Check if the previous element is a .cm-tag.cm-bracket with the text of '<'
-                if (tagElement.prev().hasClass('cm-bracket') && tagElement.prev().text() === '<') {
-                    var tag = tagElement.text();
-                    if (!this.cmTagElements[tag]) {
-                        this.cmTagElements[tag] = [];
-                    }
-                    this.cmTagElements[tag].push(index);
-                }
-            }.bind(this));
-
-            // Log the cmTagElements object to the console
-            //console.log(this.cmTagElements);
-        },
 
         addRightClickHandler: function (codeMirrorInstance) {
             // Get the actual CodeMirror element
@@ -312,66 +283,35 @@
 
                 // Check if the text of the element is 'class'
                 if ($(this).text() === 'class') {
-                    // Alert a message
-                    alert('You right-clicked on a .cm-attribute with the text of "class"');
+                    // Delete the old textarea if it exists
+                    $('#myTextarea').remove();
 
+                    // Calculate the new top position
+                    var topPosition = event.pageY + 16;
+
+                    // Find the next .cm-string element in the code following the .cm-attribute that was clicked
+                    var nextStringElement = $(this).nextAll('.cm-string').first();
+
+                    // Create a new textarea element with an id
+                    var textarea = $('<textarea/>', {
+                        id: 'myTextarea',
+                        text: nextStringElement.text(), // Put the text content of the .cm-string element in the textarea
+                        css: {
+                            position: 'fixed',
+                            left: event.pageX,
+                            top: topPosition,
+                            'z-index': 100000
+                        }
+                    });
+
+                    // Append the textarea to the body
+                    $('body').append(textarea);
+
+                    // Focus the textarea
+                    textarea.focus();
                 }
             });
         },
-
-        addMouseEnterHandler: function (codeMirrorInstance) {
-            // Get the actual CodeMirror element
-            var codeMirrorElement = $(codeMirrorInstance.getWrapperElement());
-            var codeMirrorCodeElement = codeMirrorElement.find('.CodeMirror-code');
-
-            // Unbind existing events
-            $('pre.CodeMirror-line').off('mouseover mouseout');
-
-            //remove highlight class from all elements
-            $('#output *').removeClass('highlight');
-
-            var self = this; // Store a reference to the aviator object
-
-            // Set up mouseover event handler for the .CodeMirror-line elements
-            $('pre.CodeMirror-line').on('mouseover', function (event) {
-                // Check if the command key is pressed
-                if (!event.metaKey && !event.ctrlKey) {
-                    return;
-                }
-
-                var targetElement = $(this).find('.cm-tag:not(.cm-bracket)').first();
-                var tag = targetElement.text();
-
-                // Check if the previous element is a .cm-tag.cm-bracket with the text of '<'
-                if (targetElement.prev().hasClass('cm-bracket') && targetElement.prev().text() === '<') {
-                    // Get the index of the .cm-tag element
-                    var index = self.cmTagElements[tag].indexOf($('.cm-tag').index(targetElement));
-
-                    //remove all highlight classes
-                    $('#output *').removeClass('highlight');
-
-                    // Toggle a class on the corresponding element in the #output element
-                    $('#output ' + tag).eq(index).addClass('highlight');
-                }
-            });
-
-            // Set up mouseout event handler for the .CodeMirror-line elements
-            $('pre.CodeMirror-line').on('mouseout', function (event) {
-                var targetElement = $(this).find('.cm-tag:not(.cm-bracket)').first();
-                var tag = targetElement.text();
-
-                // Check if the previous element is a .cm-tag.cm-bracket with the text of '<'
-                if (targetElement.prev().hasClass('cm-bracket') && targetElement.prev().text() === '<') {
-                    // Get the index of the .cm-tag element
-                    var index = self.cmTagElements[tag].indexOf($('.cm-tag').index(targetElement));
-
-                    // Remove the highlight class from the corresponding element in the #output element
-                    $('#output ' + tag).eq(index).removeClass('highlight');
-                }
-            });
-        },
-
-
         // ====================
         // BEAUTIFYING
         // ====================
@@ -436,8 +376,8 @@
                 styleElement.type = 'text/css';
                 styleElement.id = 'aviatorStyle';
 
-                // Append the style element to the head of the document
-                document.head.appendChild(styleElement);
+                // Insert the styleElement after the element with id 'aviator-styles'
+                $('#aviator-styles').after(styleElement);
             }
 
             // Set the innerHTML of the style element to the CSS content
@@ -679,9 +619,6 @@
                     return { from: from, to: to };
                 }
             }, "fold");
-            this.addMouseEnterHandler(this.editors.input);
-
-            this.buildTagIndex(this.editors.input);
         },
 
         toggleFoldForRange: function (fromLine, fromCh, toLine, toCh) {
@@ -733,11 +670,10 @@
             this.processHTMLInput();
             this.processCSSInput();
 
-            this.handleLongPressOnClassAttribute(this.editors.input);
-            this.handleLongPressOnTag(this.editors.input);
-            this.addMouseEnterHandler(this.editors.input);
-            this.addRightClickHandler(this.editors.input);
-            this.buildTagIndex(this.editors.input);
+            //this.handleLongPressOnClassAttribute(this.editors.input);
+            //this.handleLongPressOnTag(this.editors.input);
+            //this.addRightClickHandler(this.editors.input);
+
 
 
             //this.setupLongPressOnClassAttributes(this.editors.input, '.cm-attribute');

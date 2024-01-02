@@ -1,6 +1,7 @@
 .CodeMirror {
   font-family: "MonoLisa", monospace;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  /* font-size: 12px; */
   padding: 1rem 0;
   height: 100%;
 }
@@ -13,14 +14,6 @@
   display: none !important;
 }
 
-.bc > * {
-  border: 1px solid !important;
-}
-
-.bd * {
-  border: 1px solid !important;
-}
-
 .dashboard {
   display: none;
 }
@@ -29,4 +22,51 @@
   .dashboard {
     display: flex;
   }
+}
+
+/* Reset utils */
+
+.bc > * {
+  border: 1px solid !important;
+}
+
+.bd * {
+  border: 1px solid !important;
+}
+
+section,
+subsection,
+item,
+subitem {
+  display: block;
+}
+
+/* System stuff */
+
+:root {
+  /* Define rgb shorthands */
+  --p-50: rgb(var(--color-p-50));
+  --p-100: rgb(var(--color-p-100));
+  --p-200: rgb(var(--color-p-200));
+  --p-300: rgb(var(--color-p-300));
+  --p-400: rgb(var(--color-p-400));
+  --p-500: rgb(var(--color-p-500));
+  --p-600: rgb(var(--color-p-600));
+  --p-700: rgb(var(--color-p-700));
+  --p-800: rgb(var(--color-p-800));
+  --p-900: rgb(var(--color-p-900));
+  --p-950: rgb(var(--color-p-950));
+
+  /* Define accent shorthands */
+  --a-50: rgb(var(--color-a-50));
+  --a-100: rgb(var(--color-a-100));
+  --a-200: rgb(var(--color-a-200));
+  --a-300: rgb(var(--color-a-300));
+  --a-400: rgb(var(--color-a-400));
+  --a-500: rgb(var(--color-a-500));
+  --a-600: rgb(var(--color-a-600));
+  --a-700: rgb(var(--color-a-700));
+  --a-800: rgb(var(--color-a-800));
+  --a-900: rgb(var(--color-a-900));
+  --a-950: rgb(var(--color-a-950));
 }

@@ -7,11 +7,19 @@ window.markupSnippets = {
 
     //Section
 
+    "s": "section",
+
     //Subsection
+    "ss": "subsection",
 
     //Item
+    "i": "item",
+
+    //Item
+    "si": "subitem",
 
     //Core
+    "core": "core",
 
 
     "a": "a[href]",

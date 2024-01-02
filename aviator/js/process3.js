@@ -161,9 +161,9 @@
             value = value.slice(0, -1);
         }
 
-        // If the value contains an asterisk and does not contain 'calc', wrap the entire value in a calc() function
-        if (value.includes('*') && !value.includes('calc')) {
-            value = 'calc(' + value.replace('*', ' * ') + ')';
+        // If the value contains an asterisk or a forward slash and does not contain 'calc', wrap the entire value in a calc() function
+        if ((value.includes('*') || value.includes('/')) && !value.includes('calc')) {
+            value = 'calc(' + value.replace('*', ' * ').replace('/', ' / ') + ')';
         }
 
         // Set soulClassObject.valuesString to value
@@ -225,9 +225,9 @@
             } else if (modifier === 'after') {
                 soulClassObject.prepCSSRule.selector += '::after';
             } else if (modifier === 'last-child') {
-                soulClassObject.prepCSSRule.selector += ':last-child :last-child';
+                soulClassObject.prepCSSRule.selector += ' :last-child';
             } else if (modifier === 'first-child') {
-                soulClassObject.prepCSSRule.selector += ':first-child :first-child';
+                soulClassObject.prepCSSRule.selector += ': :first-child';
             } else if (breakpoints[modifier]) {
                 soulClassObject.prepCSSRule.openingMediaQueryString = '@media(min-width:' + breakpoints[modifier] + '){';
                 soulClassObject.prepCSSRule.closingMediaQueryString = '}';
